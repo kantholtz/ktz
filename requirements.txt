@@ -1,0 +1,13 @@
+# local development dependencies
+
+ipdb
+ipython
+
+black
+flake8
+autopep8
+
+pytest
+pytest-watch
+
+-e .
