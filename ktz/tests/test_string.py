@@ -99,3 +99,10 @@ class TestEncodeDecodeLine:
         col = 1, 2, 3
         ret = kstr.decode_line(kstr.encode_line(col, fn=str), fn=int)
         assert ret == col
+
+
+class TestHashing:
+    def test_hashing(self):
+        hash1 = kstr.args_hash(1, 2, 3)
+        hash2 = kstr.args_hash(1, 2, 3)
+        assert hash1 == hash2
