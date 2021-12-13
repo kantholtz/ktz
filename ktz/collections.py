@@ -6,6 +6,7 @@ from itertools import chain
 from collections import defaultdict
 
 from typing import Any
+from typing import Union
 from typing import Callable
 from typing import Optional
 
@@ -57,12 +58,17 @@ def split(
 Index = int
 
 
+# python 3.10
+# def buckets(
+#     col: Collection[A] | Collection[tuple[B, C]],
+#     key: Optional[Callable[[Index, A], tuple[B, C]]] = None,
+#     mapper: Optional[Callable[[tuple[C]], D]] = None,
+# ) -> dict[B, list[C]] | dict[B, D]:
 def buckets(
-    col: Collection[A] | Collection[tuple[B, C]],
+    col: Union[Collection[A], Collection[tuple[B, C]]],
     key: Optional[Callable[[Index, A], tuple[B, C]]] = None,
     mapper: Optional[Callable[[tuple[C]], D]] = None,
-) -> dict[B, list[C]] | dict[B, D]:
-
+) -> Union[dict[B, list[C]], dict[B, D]]:
     dic = defaultdict(list)
 
     for i, elem in enumerate(col):
