@@ -1,11 +1,18 @@
-import draug
+# -*- coding: utf-8 -*-
+
+import ktz
 
 import pathlib
+import logging
 
 import git
 
+
 from typing import Union
 from typing import Optional
+
+
+log = logging.getLogger(__name__)
 
 
 def path(
@@ -14,6 +21,7 @@ def path(
     exists: bool = False,
     is_dir: Optional[bool] = None,
     is_file: Optional[bool] = None,
+    message: str = None,
 ) -> pathlib.Path:
     """
 
@@ -42,16 +50,20 @@ def path(
     path = pathlib.Path(name)
 
     if (exists or is_file or is_dir) and not path.exists():
-        raise draug.DraugError(f"{path} does not exist")
+        raise ktz.Error(f"{path} does not exist")
 
     if is_file and not path.is_file():
-        raise draug.DraugError(f"{path} exists but is not a file")
+        raise ktz.Error(f"{path} exists but is not a file")
 
     if is_dir and not path.is_dir():
-        raise draug.DraugError(f"{path} exists but is not a directory")
+        raise ktz.Error(f"{path} exists but is not a directory")
 
     if create:
         path.mkdir(exist_ok=True, parents=True)
+
+    if message:
+        path_abbrv = f"{path.parent.name}/{path.name}"
+        log.info(message.format(path=path, path_abbrv=path_abbrv))
 
     return path
 

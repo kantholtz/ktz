@@ -5,6 +5,7 @@ from ktz.typing import A
 import hashlib
 from itertools import zip_longest
 
+from typing import Union
 from typing import Optional
 from typing import Callable
 
@@ -31,7 +32,7 @@ def decode_line(
     sep: str = ",",
     fn: Callable[[A], str] = None,
     fns: Iterable[Optional[Callable[[str], A]]] = None,
-) -> tuple[str | A]:
+) -> tuple[Union[str, A]]:
     """Decode a value list bytestring
 
     Takes a unicode encoded bytestring separated by the seperator
@@ -67,7 +68,7 @@ def decode_line(
 
 
 def encode_line(
-    data: Iterable[str | A],
+    data: Iterable[Union[str, A]],
     sep: str = ",",
     fn: Callable[[A], str] = None,
     fns: Iterable[Optional[Callable[[A], str]]] = None,
