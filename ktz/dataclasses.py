@@ -40,6 +40,37 @@ class Index(Generic[T]):
 
         return agg
 
+    def get(self, **kwargs) -> set[T]:
+        """Shortcut for single-field queries
+
+        If a single field is given, no distinction between dis() and
+        con() exists. So this is a nice shortcut for simple queries.
+
+        Parameters
+        ----------
+        **kwargs : field-key pair
+
+        Returns
+        -------
+        set[T]
+            Subset of indexed dataclasses
+
+        Examples
+        --------
+        >>> from dataclasses import dataclass
+        >>> from ktz.dataclasses import Index
+        >>> @dataclass(frozen=True)
+        ... class A:
+        ...     x: int
+        ...
+        >>> idx = Index(A).add([A(x=1), A(x=2)])
+        >>> idx.get(x=2)
+        {A(x=2)}
+
+        """
+        assert len(kwargs) < 2
+        return self.dis(**kwargs)
+
     def dis(self, **kwargs) -> set[T]:
         """∨ : Obtain unionized subset of queried dataclasses
 
@@ -66,7 +97,7 @@ class Index(Generic[T]):
         ...     y: int
         ...
         >>> idx = Index(A).add([A(x=2, y=1), A(x=2, y=2), A(x=3, y=3)])
-        >>> idx.get(x=2, y=3)
+        >>> idx.dis(x=2, y=3)
         {A(x=2, y=1), A(x=3, y=3)}
 
         """
@@ -99,7 +130,7 @@ class Index(Generic[T]):
         ...     y: int
         ...
         >>> idx = Index(A).add([A(x=2, y=1), A(x=2, y=2), A(x=3, y=3)])
-        >>> idx.get(x=2, y=1)
+        >>> idx.con(x=2, y=1)
         {A(x=2, y=1)}
 
         """

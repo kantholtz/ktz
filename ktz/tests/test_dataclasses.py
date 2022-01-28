@@ -42,33 +42,28 @@ class TestIndex:
         with pytest.raises(KeyError):
             idx.dis(asd=5)
 
+    def _test_single(self, fn):
+        assert fn() == {}
+
+        assert fn(i=1) == {a[0], a[1]}
+        assert fn(i=2) == {a[2]}
+        assert fn(i=3) == {a[3]}
+
+        assert fn(f=2.3) == {a[0], a[1], a[2]}
+        assert fn(f=2.5) == {a[3]}
+
+        assert fn(s="hello") == {a[0], a[2]}
+        assert fn(s="hello again") == {a[1]}
+        assert fn(s="different") == {a[3]}
+
+    def test_get_single(self, idx):
+        self._test_single(idx.get)
+
     def test_con_single(self, idx):
-        assert idx.con() == {}
-
-        assert idx.con(i=1) == {a[0], a[1]}
-        assert idx.con(i=2) == {a[2]}
-        assert idx.con(i=3) == {a[3]}
-
-        assert idx.con(f=2.3) == {a[0], a[1], a[2]}
-        assert idx.con(f=2.5) == {a[3]}
-
-        assert idx.con(s="hello") == {a[0], a[2]}
-        assert idx.con(s="hello again") == {a[1]}
-        assert idx.con(s="different") == {a[3]}
+        self._test_single(idx.con)
 
     def test_dis_single(self, idx):
-        assert idx.dis() == {}
-
-        assert idx.dis(i=1) == {a[0], a[1]}
-        assert idx.dis(i=2) == {a[2]}
-        assert idx.dis(i=3) == {a[3]}
-
-        assert idx.dis(f=2.3) == {a[0], a[1], a[2]}
-        assert idx.dis(f=2.5) == {a[3]}
-
-        assert idx.dis(s="hello") == {a[0], a[2]}
-        assert idx.dis(s="hello again") == {a[1]}
-        assert idx.dis(s="different") == {a[3]}
+        self._test_single(idx.dis)
 
     def test_dis_multiple_fields(self, idx):
         assert idx.dis(i=2, s="different") == {a[2], a[3]}
