@@ -1,4 +1,6 @@
+import ktz
 from ktz.dataclasses import Index
+from ktz.dataclasses import Builder
 
 import pytest
 
@@ -122,3 +124,49 @@ class TestIndex:
             Index(A, excludes={"nope"})
         with pytest.raises(KeyError):
             Index(A, includes={"nope"})
+
+
+@dataclass
+class Product:
+    a: int
+    b: str
+
+
+class TestBuilder:
+    def test_building(self):
+        build = Builder(Klass=Product)
+
+        build.add(a=3)
+        assert build.get("a") == 3
+
+        build.add(b="foo")
+        assert build.get("b") == "foo"
+
+        product = build()
+        assert product == Product(a=3, b="foo")
+
+    def test_building_incomplete(self):
+        build = Builder(Klass=Product)
+        build.add(a=3)
+
+        with pytest.raises(TypeError):
+            build()
+
+    def test_building_overwrite(self):
+        build = Builder(Klass=Product)
+
+        build.add(a=3)
+        build.add(a=4)
+        build.add(b="foo")
+        build.add(b="bar")
+
+        product = build()
+        assert product == Product(a=4, b="bar")
+
+    def test_building_immutable(self):
+        build = Builder(Klass=Product, immutable=True)
+
+        build.add(a=3)
+
+        with pytest.raises(ktz.Error):
+            build.add(a=4)

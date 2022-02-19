@@ -6,6 +6,7 @@ This module offers
   Builder: to iteratively build (immutable) data objects
 """
 
+import ktz
 
 from dataclasses import fields
 from dataclasses import asdict
@@ -286,3 +287,81 @@ class Index(Generic[T]):
             self._idxs[name] = defaultdict(set)
 
         self._flat = set()
+
+
+# ---
+
+
+class Builder:
+    """
+    Simple builder to incrementally build a dataclass.
+
+    An instance of this class maintains a kwargs dictionary
+    which can be incrementally popularized. Calling the
+    instance attempts to build the provided dataclass object.
+    """
+
+    def __init__(self, Klass, immutable: bool = False):
+        """Create a builder.
+
+        Parameters
+        ----------
+        Klass : dataclass
+            Dataclass constructor
+        immutable : bool
+            whether multiple assignments are allowed
+
+        Examples
+        --------
+        >>> from dataclasses import dataclass
+        >>> from ktz.dataclasses import Builder
+        >>> @dataclass
+        ... class Product:
+        ...     a: int
+        ...     b: str
+        >>> build = Builder(Klass=Product)
+        >>> build.add(a=3)
+        >>> build.get('a')
+        3
+        >>> build.add(b="foo")
+        >>> build()
+        Product(a=3, b='foo')
+
+        """
+        self._Klass = Klass
+        self._kwargs = {}
+        self._immutable = immutable
+
+    def __call__(self):
+        """Assemble the dataclass."""
+        return self._Klass(**self._kwargs)
+
+    def get(self, key: str):
+        """Returns a provided kwarg.
+
+        Parameters
+        ----------
+        key : str
+        """
+        return self._kwargs[key]
+
+    def add(self, **kwargs):
+        """Add properties to the dataclass.
+
+        Parameters
+        ----------
+        **kwargs : Any
+
+        Raises
+        ------
+        ktz.Error
+            If immutable=True, this is raised when a key is provided
+            multiple times.
+
+        """
+        for key, val in kwargs.items():
+
+            if self._immutable and key in self._kwargs:
+                raise ktz.Error(f"cannot overwrite {key}")
+
+            self._kwargs[key] = val
