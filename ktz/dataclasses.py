@@ -1,3 +1,12 @@
+"""
+Extensions for dataclasses.
+
+This module offers
+  Index: an inverted index for dataclasses
+  Builder: to iteratively build (immutable) data objects
+"""
+
+
 from dataclasses import fields
 from dataclasses import asdict
 from collections import defaultdict
@@ -14,11 +23,26 @@ T = TypeVar("T")
 
 class Index(Generic[T]):
     """
-    Maintain an inverted index for dataclasses
+    Maintain an inverted index for dataclasses.
+
+    Provided instances are saved to indexes based on their
+    properties. The can then be retrieved fast by those properties.
     """
 
     @property
     def flat(self) -> set[T]:
+        """Return all indexed dataclasses.
+
+        Note that this does not return a copy. You must create a copy
+        before modifying this datastructure, otherwise you can expect
+        undefined behaviour.
+
+        Returns
+        -------
+        set[T]
+            Set of all indexed dataclasses
+
+        """
         return self._flat
 
     # ---
@@ -41,7 +65,8 @@ class Index(Generic[T]):
         return agg
 
     def get(self, **kwargs) -> set[T]:
-        """Shortcut for single-field queries
+        """
+        Shortcut for single-field queries.
 
         If a single field is given, no distinction between dis() and
         con() exists. So this is a nice shortcut for simple queries.
@@ -72,7 +97,8 @@ class Index(Generic[T]):
         return self.dis(**kwargs)
 
     def dis(self, **kwargs) -> set[T]:
-        """∨ : Obtain unionized subset of queried dataclasses
+        """
+        ∨ : Obtain unionized subset of queried dataclasses.
 
         Each indexed field is searched for the associated dataclasses
         and the union of these results is returned.
@@ -105,7 +131,8 @@ class Index(Generic[T]):
         return {} if not agg else set.union(*agg)
 
     def con(self, **kwargs) -> set[T]:
-        """∧ : Obtain intersection of queried dataclasses
+        """
+        ∧ : Obtain intersection of queried dataclasses.
 
         Each indexed field is searched for the associated dataclasses
         and the intersection of these results is returned.
@@ -144,7 +171,8 @@ class Index(Generic[T]):
         return {} if not agg else set.intersection(*agg)
 
     def keys(self, field: str) -> set[Any]:
-        """Obtain indexed keys for the given field
+        """
+        Obtain indexed keys for the given field.
 
         This enumerates the possible keys that can be used to retrieve
         indexed dataclasses
@@ -172,14 +200,14 @@ class Index(Generic[T]):
         {2, 3, 5}
 
         """
-
         if field not in self._idxs:
             self._raise_keyerror(field)
 
         return set(self._idxs[field])
 
     def add(self, ts: Iterable[T]) -> "Index":
-        """Add instances to index
+        """
+        Add instances to index.
 
         Parameters
         ----------
@@ -190,8 +218,8 @@ class Index(Generic[T]):
         -------
         "Index"
             self
-        """
 
+        """
         for t, dic in ((t, asdict(t)) for t in ts):
             self._flat.add(t)
             for key in self._idxs:
@@ -205,7 +233,8 @@ class Index(Generic[T]):
         includes: Iterable[str] = None,
         excludes: Iterable[str] = None,
     ):
-        """Create a new index
+        """
+        Create a new index.
 
         Indexes dataclasses of the specified type. Subsets of the
         indexed dataclasses are returned by Index.con and Index.dis.
@@ -233,8 +262,8 @@ class Index(Generic[T]):
         ...     x: int
         ...
         >>> idx = Index(A).add([A(x=2), A(x=3), A(x=5)])
-        """
 
+        """
         includes = set(includes) if includes else set()
         excludes = set(excludes) if excludes else set()
 
