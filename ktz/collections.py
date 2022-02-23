@@ -11,6 +11,7 @@ from typing import Callable
 from typing import Optional
 
 from collections.abc import Iterable
+from collections.abc import Generator
 from collections.abc import Collection
 
 
@@ -87,10 +88,20 @@ def unbucket(
     return [(key, el) for key, lis in buckets.items() for el in lis]
 
 
+Nested = Union[Iterable[A], A]
+
+
 def flat(
-    col: Collection[Any],
-    depth: int = 2,
-) -> Collection[Any]:
-    yield from col if depth == 1 else chain(
-        *(flat(lis, depth=depth - 1) for lis in col)
-    )
+    col: Iterable[Nested],
+    depth: int = -1,
+) -> Generator[A, None, None]:
+
+    if depth == 0:
+        yield col
+        return
+
+    try:
+        for elem in col:
+            yield from flat(col=elem, depth=depth - 1)
+    except TypeError:
+        yield col

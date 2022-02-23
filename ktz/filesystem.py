@@ -81,15 +81,15 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
     that much files.
 
     """
-    current = path(current, message="rotating {path_abbrv}")
+    current = path(current)
     if keep:
-        assert keep > 0
+        assert keep > 1
 
     def _new(
         p: pathlib.Path,
         n: int = None,
         suffixes: list[str] = None,
-    ):
+    ) -> pathlib.Path:
         name = p.name.split(".")[0]  # .stem returns foo.tar for foo.tar.gz
         return p.parent / "".join([name, "." + str(n)] + suffixes)
 
@@ -100,10 +100,12 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
             n = int(old_n[1:]) + 1
             new = _new(p, n=n, suffixes=suffixes)
 
-            if keep <= n:
-                _rotate(new)
+            _rotate(new)
 
-            p.rename(new)
+            if n <= keep:
+                p.rename(new)
+            else:
+                p.unlink()
 
     if current.exists():
         new = _new(current, n=1, suffixes=current.suffixes)

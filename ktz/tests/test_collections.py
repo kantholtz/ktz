@@ -91,3 +91,25 @@ class TestUnbucket:
         ref = [(1, 2), (5, 6), (5, 7)]
         ret = kcol.unbucket({1: [2], 5: [6, 7]})
         assert ret == ref
+
+
+class TestFlat:
+    def test_flat(self):
+        ref = 1, 2
+        ret = kcol.flat([[[1]], [2]])
+        assert tuple(ret) == ref
+
+    def test_flat_idempotent(self):
+        ref = 1, 2
+        ret = kcol.flat(kcol.flat([[1], [2]]))
+        assert tuple(ret) == ref
+
+    def test_flat_depth_1(self):
+        ref = [1], 2
+        ret = kcol.flat([[1], 2], depth=1)
+        assert tuple(ret) == ref
+
+    def test_flat_depth_2(self):
+        ref = 1, [2]
+        ret = kcol.flat([[1], [[2]]], depth=2)
+        assert tuple(ret) == ref

@@ -7,7 +7,7 @@ import pytest
 from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class A:
 
     i: int
@@ -57,6 +57,9 @@ class TestIndex:
         assert fn(s="hello") == {a[0], a[2]}
         assert fn(s="hello again") == {a[1]}
         assert fn(s="different") == {a[3]}
+
+    def test_flat(self, idx):
+        assert sorted(a) == sorted(idx.flat)
 
     def test_get_single(self, idx):
         self._test_single(idx.get)
