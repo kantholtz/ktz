@@ -1,11 +1,14 @@
 # KTZ - Python Tools
 
-Frequently used and shared functionality across my projects.
+My personal Python toolbox.
+
 
 ## Installation
 
+Python 3.9 is required.
+
 ``` console
-$ conda create -n ktz python=3.10
+$ conda create -n ktz python=3.9
 $ conda activate ktz
 $ pip install ktz
 ```
@@ -23,6 +26,11 @@ $ pytest
 
 # to continually run tests
 $ ptw -c
+
+# to check code coverage
+$ coverage run -m pytest
+$ coverage report
+$ coverage html
 ```
 
 

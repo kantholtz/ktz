@@ -1,4 +1,4 @@
-# local development dependencies
+# development dependencies
 
 ipdb
 ipython
@@ -9,5 +9,6 @@ autopep8
 
 pytest
 pytest-watch
+coverage
 
 -e .
