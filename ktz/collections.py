@@ -23,39 +23,6 @@ log = logging.getLogger(__name__)
 #
 
 A, B, C, D = Any, Any, Any, Any
-
-
-def partition(
-    col: Iterable[A],
-    fn: Optional[Callable[[A], B]] = None,
-) -> dict[B, list[A]]:
-    dic = defaultdict(list)
-
-    if fn is None:
-        fn = bool
-
-    for it in col:
-        k = fn(it)
-        dic[k].append(it)
-
-    return dict(dic)
-
-
-def split(
-    col: Iterable[A],
-    fn: Optional[Callable[[A], bool]] = None,
-) -> tuple[list[A, A]]:
-    a, b = [], []
-    if fn is None:
-        fn = bool
-
-    for it in col:
-        lis = a if fn(it) else b
-        lis.append(it)
-
-    return a, b
-
-
 Index = int
 
 

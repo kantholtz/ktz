@@ -3,35 +3,6 @@
 from ktz import collections as kcol
 
 
-class TestPartition:
-    def test_partition(self):
-        ref = {False: [0, 0], True: [1, 2, 3]}
-        ret = kcol.partition([0, 1, 0, 2, 3])
-        assert ret == ref
-
-    def test_partition_order(self):
-        ref = {False: [10, 20], True: [1, 2, 3]}
-        ret = kcol.partition([1, 10, 2, 3, 20], fn=lambda x: x < 10)
-        assert ret == ref
-
-    def test_partition_multikey(self):
-        ref = {"0": [0], "1": [1, 1]}
-        ret = kcol.partition([1, 0, 1], fn=str)
-        assert ret == ref
-
-
-class TestSplit:
-    def test_split_simple(self):
-        ref = [1, 2, 3], [0, 0]
-        ret = kcol.split([1, 0, 2, 0, 3])
-        assert ret == ref
-
-    def test_split_complex(self):
-        ref = [1, 2], [10, 20]
-        ret = kcol.split([1, 10, 2, 20], fn=lambda x: x < 10)
-        assert ret == ref
-
-
 class TestBuckets:
 
     #
