@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from ktz.typing import A
+"""String operations."""
+
 
 import hashlib
 from itertools import zip_longest
 
+from typing import Any
 from typing import Union
 from typing import Optional
 from typing import Callable
 
 from collections.abc import Iterable
+
+
+A = Any
 
 
 def _apply_fns(col, fn, fns):
@@ -33,7 +38,8 @@ def decode_line(
     fn: Callable[[A], str] = None,
     fns: Iterable[Optional[Callable[[str], A]]] = None,
 ) -> tuple[Union[str, A]]:
-    """Decode a value list bytestring
+    """
+    Decode a value list bytestring.
 
     Takes a unicode encoded bytestring separated by the seperator
     token(s) and returns a value tuple. If fns are given, these are
@@ -57,10 +63,12 @@ def decode_line(
 
     Examples
     --------
-    FIXME: Add docs.
+    from ktz.string import decode_line
+    >>> line = "Hellö | 22 | True".encode("unicode_escape")
+    >>> decode_line(line, sep="|", fns=(str, int, bool))
+    ('Hellö', 22, True)
 
     """
-
     mapped = list(map(str.strip, encoded.decode("unicode_escape").split(sep)))
     mapped = _apply_fns(col=mapped, fn=fn, fns=fns)
 
@@ -73,7 +81,8 @@ def encode_line(
     fn: Callable[[A], str] = None,
     fns: Iterable[Optional[Callable[[A], str]]] = None,
 ) -> bytes:
-    """Encode a value collection
+    r"""
+    Encode a value collection.
 
     Take a collection of either string values or other (requires fns)
     and produces a bytestring representation with values separated by
@@ -97,10 +106,14 @@ def encode_line(
 
     Examples
     --------
-    FIXME: Add docs.
+    >>> from ktz.string import decode_line
+    >>> line = encode_line(("Hellö", 22, True), sep="|", fn=str)
+    >>> line
+    b'Hell\\xf6|22|True\n'
+    >>> decode_line(line, sep="|", fns=(str, int, bool))
+    ('Hellö', 22, True)
 
     """
-
     data = _apply_fns(col=data, fn=fn, fns=fns)
     assert all(sep not in s for s in data)
 
@@ -110,7 +123,8 @@ def encode_line(
 def args_hash(
     *args,
 ) -> str:
-    """Produce a hash value for the provided args
+    """
+    Produce a hash value for the provided args.
 
     All provided arguments are transformed by their __str__
     implementation.
@@ -126,8 +140,9 @@ def args_hash(
 
     Examples
     --------
-    FIXME: Add docs.
+    >>> from ktz.string import args_hash
+    >>> args_hash(10, "foo", True)
+    'a8c83023141d8ed54fcb3d019bdf61a7468f01ac5704d0eb5bf1c626'
     """
-
     bytestr = "".join(map(str, args)).encode()
     return hashlib.sha224(bytestr).hexdigest()

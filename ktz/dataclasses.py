@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Extensions for dataclasses.
 
@@ -337,7 +339,7 @@ class Builder:
         return self._Klass(**self._kwargs)
 
     def get(self, key: str):
-        """Returns a provided kwarg.
+        """Get the value of the provided key.
 
         Parameters
         ----------

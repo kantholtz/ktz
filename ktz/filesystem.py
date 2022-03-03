@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Things to do with the filesystem."""
+
 import ktz
 
 import pathlib
@@ -24,29 +26,50 @@ def path(
     message: str = None,
 ) -> pathlib.Path:
     """
+    Create paths.
 
-    Quickly create and check pathlib.Paths
+    This simply gathers usual operations on Path objects for which
+    normally multiple calls to the pathlib are required.
 
     Parameters
     ----------
-
     name : Union[str, pathlib.Path]
-      The target file or directory
-
+        The path in question
     create : bool
-      Create as directory
-
+        Whether to create a directory if it does not exist
     exists : bool
-      Checks whether the file or directory exists
+        Check if the path exists, otherwise raise
+    is_dir : Optional[bool]
+        Check if path is a directory, otherwise raise
+    is_file : Optional[bool]
+        Check if path is a file, otherwise raise
+    message : str
+        A message to be logged
 
-    is_file : bool
-      Checks whether the target is a file
+    Returns
+    -------
+    pathlib.Path
+        A Path instance
 
-    is_file : bool
-      Checks whether the target is a directory
+    Raises
+    ------
+    ktz.Error
+        Raised if any of the constraints are violated
+
+    Examples
+    --------
+    >>> from ktz.filesystem import path
+    >>> somedir = path('foo/bar', create=True)
+    >>> path(somedir, exists=True)
+    PosixPath('foo/bar')
+    >>> path(somedir, is_dir=True)
+    PosixPath('foo/bar')
+    >>> path(somedir, is_file=True)
+    Traceback (most recent call last):
+      (...)
+    Error: foo/bar exists but is not a file
 
     """
-
     path = pathlib.Path(name)
 
     if (exists or is_file or is_dir) and not path.exists():
@@ -70,8 +93,7 @@ def path(
 
 def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
     """
-
-    Rotates a file
+    Rotate a file.
 
     Given a file "foo.tar", rotating it will produce "foo.1.tar".
     If "foo.1.tar" already exists then "foo.1.tar" -> "foo.2.tar".
@@ -80,8 +102,35 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
     If 'keep' is set to a positive integer, keeps at most
     that much files.
 
+    Parameters
+    ----------
+    current : Union[str, pathlib.Path]
+        Target file or directory
+    keep : int
+        How many rotated files to keep at most
+
+    Examples
+    --------
+    >>> from ktz.filesystem import path_rotate
+    >>> ! touch test.txt
+    >>> path_rotate('test.txt', keep=2)
+    >>> ! ls
+    test.1.txt
+    >>> ! touch test.txt
+    >>> ! ls
+    test.txt  test.1.txt
+    >>> path_rotate('test.txt', keep=2)
+    >>> ! ls
+    test.1.txt  test.2.txt
+    >>> ! touch test.txt
+    >>> ! ls
+    test.txt test.1.txt test.2.txt
+    >>> path_rotate('test.txt', keep=2)
+    >>> ! ls
+    test.1.txt  test.2.txt
+
     """
-    current = path(current)
+    current = path(current, exists=True)
     if keep:
         assert keep > 1
 
@@ -107,13 +156,27 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
             else:
                 p.unlink()
 
-    if current.exists():
-        new = _new(current, n=1, suffixes=current.suffixes)
-        _rotate(new)
-        current.rename(new)
+    new = _new(current, n=1, suffixes=current.suffixes)
+    _rotate(new)
+    current.rename(new)
 
 
 def git_hash() -> str:
+    """
+    Obtain the current git hash.
+
+    Returns
+    -------
+    str
+        Current git hash
+
+    Examples
+    --------
+    >>> from ktz.filesystem import git_hash
+    >>> git_hash()
+    'bedee821a4c1e1217cee783b33ad3bea98dbbb9d'
+
+    """
     repo = git.Repo(search_parent_directories=True)
     # dirty = '-dirty' if repo.is_dirty else ''
     return str(repo.head.object.hexsha)
