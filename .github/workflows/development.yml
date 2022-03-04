@@ -25,3 +25,6 @@ jobs:
         run: |
           coverage run -m pytest
           coverage report
+
+      - name: build package
+        run: python -m build
