@@ -16,7 +16,7 @@ $ pip install ktz
 For a local installation with all dev dependencies:
 
 ``` console
-$ conda create -n ktz python=3.10
+$ conda create -n ktz python=3.9
 $ conda activate ktz
 $ pip install -r requirements.txt
 $ pip install -e .
@@ -32,8 +32,3 @@ $ coverage run -m pytest
 $ coverage report
 $ coverage html
 ```
-
-
-## Documentation
-
-Code is documented. Documentation generation pending...
