@@ -12,7 +12,5 @@ setup(
     long_description_content_type="text/markdown",
     install_requires=[
         "gitpython==3.*",
-        "pytest",
-        "coverage",
     ],
 )
