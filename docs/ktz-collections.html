@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Collections &#8212; KTZ Python Tools 0.1 documentation</title>
+    
+    <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/pydata-sphinx-theme.css" />
+    
+    <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dataclasses" href="ktz-dataclasses.html" />
+    <link rel="prev" title="KTZ Python Tools" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="index.html">
+<p class="title">KTZ Python Tools</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Collections
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="ktz-dataclasses.html">
+  Dataclasses
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="ktz-filesystem.html">
+  Filesystem
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="ktz-string.html">
+  String
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-ktz.collections">
+<span id="collections"></span><h1>Collections<a class="headerlink" href="#module-ktz.collections" title="Permalink to this headline">¶</a></h1>
+<p>Tools for working with collection types.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ktz.collections.buckets">
+<span class="sig-prename descclassname"><span class="pre">ktz.collections.</span></span><span class="sig-name descname"><span class="pre">buckets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.collections.buckets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort data into buckets.</p>
+<p>Takes a collection and sorts the data into buckets based on a
+provided function. The resulting buckets can then optionally be
+mapped (e.g. to be reduced).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>col</strong><span class="classifier">Union[Collection[A], Collection[tuple[B, C]]]</span></dt><dd><p>Collection to be partitioned</p>
+</dd>
+<dt><strong>key</strong><span class="classifier">Optional[Callable[[Index, A], tuple[B, C]]]</span></dt><dd><p>Optional function that returns (key, value) tuples</p>
+</dd>
+<dt><strong>mapper</strong><span class="classifier">Optional[Callable[[tuple[C]], D]]</span></dt><dd><p>Optional function that takes a bucket and maps it</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Union[dict[B, list[C]], dict[B, D]]</dt><dd><p>A dictionary which maps bucket identifieres to their data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">buckets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">buckets</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span><span class="mi">0</span> <span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="go">{False: [1, 3, 5], True: [2, 4]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">buckets</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span><span class="mi">0</span> <span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">mapper</span><span class="o">=</span><span class="nb">sum</span><span class="p">)</span>
+<span class="go">{False: 9, True: 6}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ktz.collections.flat">
+<span class="sig-prename descclassname"><span class="pre">ktz.collections.</span></span><span class="sig-name descname"><span class="pre">flat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.collections.flat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flattens a collection.</p>
+<p>Consumes the given iterable and flattens it up to n level deep or
+completely.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>col</strong><span class="classifier">Iterable[Nested]</span></dt><dd><p>Nested collection</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int</span></dt><dd><p>Maximum depth to flatten</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Generator[A, None, None]</dt><dd><p>Generator with flattened collection</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">flat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">flat</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[[</span><span class="mi">2</span><span class="p">]]],</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">&lt;generator object flat at 0x7f2886aeccf0&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">flat</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[[</span><span class="mi">2</span><span class="p">]]],</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="go">[1, [2]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ktz.collections.unbucket">
+<span class="sig-prename descclassname"><span class="pre">ktz.collections.</span></span><span class="sig-name descname"><span class="pre">unbucket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buckets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.collections.unbucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flattens a bucket dictionary.</p>
+<p>Partitioned data is joined back up together and
+presented as tuples in a flat list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>buckets</strong><span class="classifier">dict[A, list[B]]</span></dt><dd><p>Bucket dictionary</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>list[tuple[A, B]]</dt><dd><p>Flattened collection</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">buckets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">unbucket</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kcol</span><span class="o">.</span><span class="n">buckets</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span><span class="mi">0</span> <span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="go">{False: [1, 3, 5], True: [2, 4]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parts</span> <span class="o">=</span> <span class="n">kcol</span><span class="o">.</span><span class="n">buckets</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span><span class="mi">0</span> <span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unbucket</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+<span class="go">[(False, 1), (False, 3), (False, 5), (True, 2), (True, 4)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">KTZ Python Tools</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="ktz-dataclasses.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dataclasses</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2022, Felix Hamann.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
