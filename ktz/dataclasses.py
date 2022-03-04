@@ -30,6 +30,16 @@ class Index(Generic[T]):
 
     Provided instances are saved to indexes based on their
     properties. The can then be retrieved fast by those properties.
+
+    Methods
+    -------
+    get:
+      Retrieve an object by key
+    dis:
+      Retrieve the union result for multi-key queries
+    con:
+      Retrieve the intersection result for multi-key queries
+
     """
 
     @property
@@ -301,6 +311,16 @@ class Builder:
     An instance of this class maintains a kwargs dictionary
     which can be incrementally popularized. Calling the
     instance attempts to build the provided dataclass object.
+
+    Methods
+    -------
+    __call__:
+      Assemble the dataclass
+    get:
+      Obtain an already added value
+    add:
+      Add another property
+
     """
 
     def __init__(self, Klass, immutable: bool = False):
@@ -335,7 +355,13 @@ class Builder:
         self._immutable = immutable
 
     def __call__(self):
-        """Assemble the dataclass."""
+        """Assemble the dataclass instance.
+
+        Examples
+        --------
+        FIXME: Add docs.
+
+        """
         return self._Klass(**self._kwargs)
 
     def get(self, key: str):
