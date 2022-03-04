@@ -4,33 +4,33 @@ on:
   release:
     types: [push]
 
+
 jobs:
-
-  development:
+  Development:
     runs-on: ubuntu-latest
-
     steps:
       - run: echo "job triggered by: ${{ github.event_name }}"
-      - run: echo "executed on ${{ runner.os }}"
-      - run: echo "running for ${{ github.repository }} -- ${{ github.ref }}."
 
-      - name: checkout repository
-        uses: actions/checkout@v2
+      # - run: echo "executed on ${{ runner.os }}"
+      # - run: echo "running for ${{ github.repository }} -- ${{ github.ref }}."
 
-      - name: set up python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
+      # - name: checkout repository
+      #   uses: actions/checkout@v2
 
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build
+      # - name: set up python
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: '3.9'
 
-      - name: run tests
-        run: |
-          coverage run -m pytest
-          coverage report
+      # - name: install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install build
 
-      - name: build package
-        run: python -m build
+      # - name: run tests
+      #   run: |
+      #     coverage run -m pytest
+      #     coverage report
+
+      # - name: build package
+      #   run: python -m build
