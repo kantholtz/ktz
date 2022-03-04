@@ -1,16 +1,10 @@
 name: Current Master Checks
-
-on:
-  release:
-    types: [push]
-
+on: [push]
 jobs:
-
-  development:
+  Test-And-Build:
     runs-on: ubuntu-latest
-
     steps:
-      - run: echo "job triggered by: ${{ github.event_name }}"
+      - run: echo "Job triggered by ${{ github.event_name }}"
       - run: echo "executed on ${{ runner.os }}"
       - run: echo "running for ${{ github.repository }} -- ${{ github.ref }}."
 
@@ -26,6 +20,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install build
+          pip install -r requirements.txt
 
       - name: run tests
         run: |
