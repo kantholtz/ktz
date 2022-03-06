@@ -6,7 +6,7 @@
 [![Code Style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 
 
-Kantholtz' personal Python toolbox. Check out the ![documentation here](https://kantholtz.github.io/ktz/).
+Kantholtz' personal Python toolbox. Check out the [documentation here](https://kantholtz.github.io/ktz/).
 
 
 ## Installation
