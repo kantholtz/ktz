@@ -1,8 +1,11 @@
-name: Master Checks
-on: [push]
+name: Create Release
+
+on:
+  release:
+    types: [published]
 
 jobs:
-  test-and-build:
+  test-and-publish:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Job triggered by ${{ github.event_name }}"
@@ -29,3 +32,9 @@ jobs:
 
       - name: build package
         run: python -m build
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
