@@ -1,5 +1,8 @@
 # KTZ - Python Tools
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![master checks](https://github.com/kantholtz/ktz/actions/workflows/development.yml/badge.svg)
+
 My personal Python toolbox.
 
 
@@ -16,10 +19,11 @@ $ pip install ktz
 For a local installation with all dev dependencies:
 
 ``` console
+$ git clone https://github.com/kantholtz/ktz.git
+$ cd ktz
 $ conda create -n ktz python=3.9
 $ conda activate ktz
-$ pip install -r requirements.txt
-$ pip install -e .
+$ pip install .[dev]
 
 # run tests
 $ pytest
