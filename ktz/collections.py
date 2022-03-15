@@ -4,6 +4,8 @@
 
 
 import logging
+from itertools import chain
+from itertools import count
 from collections import defaultdict
 
 from typing import Any
@@ -157,3 +159,39 @@ def flat(
             yield from flat(col=elem, depth=depth - 1)
     except TypeError:
         yield col
+
+
+class Incrementer(dict):
+    """
+    Automatically assign unique ids.
+
+    Examples
+    --------
+    >>> from ktz.collections import Incrementer
+    >>> incr = Incrementer()
+    >>> incr['a']
+    0
+    >>> incr['b']
+    1
+    >>> incr['a']
+    0
+    >>> incr['c']
+    2
+
+    """
+
+    def __init__(self, *args, fn: Iterable[A] = None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # iter() is idempotent and iterators are iterable
+        self._iterator = count() if fn is None else iter(fn)
+
+    def __setitem__(self, key: Any, val: Any):
+        raise KeyError("must not set values explicitly")
+
+    def __getitem__(self, key: Any) -> Union[int, A]:
+        if key not in self:
+            val = next(self._iterator)
+            super().__setitem__(key, val)
+
+        return super().__getitem__(key)

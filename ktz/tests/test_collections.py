@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import pytest
 from ktz import collections as kcol
 
 
@@ -8,7 +9,6 @@ class TestBuckets:
     #
     #  without key and without mapper
     #
-
     def test_buckets_simple(self):
         ref = {1: [2], 3: [4]}
         ret = kcol.buckets(((1, 2), (3, 4)))
@@ -84,3 +84,33 @@ class TestFlat:
         ref = 1, [2]
         ret = kcol.flat([[1], [[2]]], depth=2)
         assert tuple(ret) == ref
+
+
+class TestIncrementer:
+    def test_increment_default(self):
+        incr = kcol.Incrementer()
+        assert incr["a"] == 0
+        assert incr["b"] == 1
+        assert incr["a"] == 0
+        assert incr["c"] == 2
+
+    def test_increment_fn_iterable(self):
+        incr = kcol.Incrementer(fn=range(10, 100))
+
+        assert incr["a"] == 10
+        assert incr["b"] == 11
+        assert incr["a"] == 10
+        assert incr["c"] == 12
+
+    def test_increment_fn_iterator(self):
+        incr = kcol.Incrementer(fn=iter(range(10, 100)))
+
+        assert incr["a"] == 10
+        assert incr["b"] == 11
+        assert incr["a"] == 10
+        assert incr["c"] == 12
+
+    def test_increment_setitem(self):
+        incr = kcol.Incrementer()
+        with pytest.raises(KeyError):
+            incr["foo"] = 3
