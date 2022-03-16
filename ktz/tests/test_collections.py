@@ -114,3 +114,14 @@ class TestIncrementer:
         incr = kcol.Incrementer()
         with pytest.raises(KeyError):
             incr["foo"] = 3
+
+    def test_increment_freeze_unfreeze(self):
+        incr = kcol.Incrementer()
+        assert incr["a"] == 0
+
+        incr.freeze()
+        with pytest.raises(NameError):
+            incr["b"]
+
+        incr.unfreeze()
+        assert incr["b"] == 1

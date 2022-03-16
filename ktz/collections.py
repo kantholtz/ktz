@@ -2,9 +2,7 @@
 
 """Tools for working with collection types."""
 
-
 import logging
-from itertools import chain
 from itertools import count
 from collections import defaultdict
 
@@ -177,11 +175,17 @@ class Incrementer(dict):
     0
     >>> incr['c']
     2
-
+    >>> incr.freeze()
+    >>> incr['d']
+    NameError: Key 'd' not present and incrementer is frozen.
+    >>> incr.unfreeze()
+    >>> incr['d']
+    3
     """
 
     def __init__(self, *args, fn: Iterable[A] = None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.unfreeze()
 
         # iter() is idempotent and iterators are iterable
         self._iterator = count() if fn is None else iter(fn)
@@ -190,8 +194,28 @@ class Incrementer(dict):
         raise KeyError("must not set values explicitly")
 
     def __getitem__(self, key: Any) -> Union[int, A]:
+        if self._frozen and key not in self:
+            raise NameError(f"Key '{key}' not present and incrementer is frozen.")
+
         if key not in self:
             val = next(self._iterator)
             super().__setitem__(key, val)
 
         return super().__getitem__(key)
+
+    def freeze(self):
+        """
+        Freeze the incrementer.
+
+        It is no longer possible to automatically create new keys.
+
+        """
+        self._frozen = True
+
+    def unfreeze(self):
+        """Unfreeze the incrementer.
+
+        Allows the creation of new keys again
+
+        """
+        self._frozen = False
