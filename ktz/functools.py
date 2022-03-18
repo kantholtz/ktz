@@ -3,6 +3,7 @@
 """Nice function-functions."""
 
 import pickle
+import logging
 from pathlib import Path
 from functools import wraps
 from dataclasses import field
@@ -17,14 +18,24 @@ from typing import Generic
 
 
 T = TypeVar("T")
+log = logging.getLogger(__name__)
 
 
 @dataclass
 class Maybe(Generic[T]):
-    """Maybe it contains data, maybe not.
+    """
+    Maybe it contains data, maybe not.
 
-    It is used for Cascade, do determine whether to execute functions,
+    Used for Cascade, to determine whether to execute functions,
     load data from cache, or ignore supposed data all together.
+
+    Development Notes
+    -----------------
+    Data can be in one of the following states:
+
+    * skip: Data is not loaded, function is not executed and cache is not written
+    * cached: A cache file exists where data can be loaded, function is not executed
+    * loaded: Data was loaded (either from cache or by function execution)
 
     Parameters
     ----------
@@ -34,12 +45,19 @@ class Maybe(Generic[T]):
     """
 
     cache: Path
-    data: Union[T, None] = field(default=None)
 
-    # extra field required as data can be None
-    # when loaded from cache
-    loaded: bool = field(default=False)
-    skip: bool = field(default=False)
+    skip: bool
+    loaded: bool
+    cached: bool
+
+    data: T = field(default=None)
+
+    def __str__(self):
+        """State information."""
+        return (
+            f"Maybe {self.cache} "
+            f"skip={self.skip} loaded={self.loaded} cached={self.cached}"
+        )
 
 
 class Cascade:
@@ -53,45 +71,48 @@ class Cascade:
     steps. This is heavily used for iterative development of data
     processing pipelines in ipython notebooks.
 
+    Examples
+    --------
+    FIXME: add docs
+
     """
 
     path: Path
     data: dict[str, Maybe]
 
-    def save(self, **kwargs: T):
-        """Save provided data to cache.
+    def get(self, name: str):
+        """Retrieve a cached object.
 
-        It will not overwrite data already saved to the cache but not
-        retrieved in the current run. Only previously unseen data is
-        saved.
+        Retrieve object of the provided name from the cache.
 
         Parameters
         ----------
-        **kwargs : T
-            Key-value pairs of to-be-cached values.
+        name : str
+            Data key
 
-        Examples
-        --------
-        >>> # see Cascade.__init__
+        Raises
+        ------
+        KeyError
+            If no cache file exists yet
 
         """
-        for name, data in kwargs.items():
-            maybe = self.data[name]
+        assert name in self.data, f"cascade: unregistered name {name}"
 
-            if maybe.skip:
-                continue
+        maybe = self.data[name]
 
-            with maybe.cache.open(mode="wb") as fd:
-                pickle.dump(data, fd)
+        if not maybe.cached:
+            raise KeyError(f"Cascade: {name} is not cached yet.")
 
-            self.data[name] = replace(
-                maybe,
-                loaded=True,
-                data=data,
-            )
+        with maybe.cache.open(mode="rb") as fd:
+            log.info(f"cascade: loading {name} from {maybe.cache.name}")
+            cached = pickle.load(fd)
 
-    def unless(self, name: str):
-        """Decorate cached functions.
+        self.data[name] = replace(maybe, loaded=True, data=cached)
+        return cached
+
+    def cache(self, name: str):
+        """
+        Decorate cache functions.
 
         This decorator handles whether a function is called or if data
         needs to be retrieved from the cache.
@@ -101,24 +122,67 @@ class Cascade:
         name : str
             Data key
 
-        Examples
-        --------
-        FIXME: Add docs.
-
         """
+        assert name in self.data, f"cascade: unregistered name {name}"
 
         def decorator(fn):
             @wraps(fn)
             def maybe_execute(*args, **kwargs):
                 maybe = self.data[name]
 
+                if maybe.skip:
+                    log.info(f"cascade: skipping {name}")
+                    return None
+
                 if maybe.loaded:
+                    log.info(f"cascade: return loaded data for {name}")
                     return maybe.data
 
-                if not maybe.skip:
-                    return fn(*args, **kwargs)
+                if maybe.cached:
+                    return self.get(name=name)
 
-                return None
+                log.info(f"cascade: cache miss for {name}")
+                ret = fn(*args, **kwargs)
+
+                log.info(f"cascade: saving {name} to {maybe.cache.name}")
+                with maybe.cache.open(mode="wb") as fd:
+                    pickle.dump(ret, fd)
+
+                self.data[name] = replace(
+                    maybe,
+                    cached=True,
+                    loaded=True,
+                    data=ret,
+                )
+
+                return ret
+
+            return maybe_execute
+
+        return decorator
+
+    def when(self, *names: str):
+        """
+        Decorate conditionally executed function.
+
+        This decorator handles whether a function is invooked at all.
+        It does not work with any returned data. Decorated functions
+        always return None.
+
+        """
+        assert all(
+            name in self.data for name in names
+        ), f"cascade: unregistered names {names}"
+
+        def decorator(fn):
+            @wraps(fn)
+            def maybe_execute(*args, **kwargs):
+                maybes = [self.data[name] for name in names]
+
+                if not all(maybe.loaded for maybe in maybes):
+                    return None
+
+                fn(*args, **kwargs)
 
             return maybe_execute
 
@@ -127,23 +191,17 @@ class Cascade:
     def __init__(
         self,
         path: Union[str, Path] = None,
-        invalidate: bool = False,
         **kwargs: Union[str, Path],
     ):
-        """Create a cached function cascade.
+        """
+        Create a cached function cascade.
 
         Parameters
         ----------
         path : Union[str, Path]
             Optional basepath to be prepended to all cache files
-        invalidate : bool
-            This will invalidate all cache files and overwrite them.
         **kwargs : Union[str, Path]
             Register data keys
-
-        Examples
-        --------
-        FIXME: Add docs.
 
         """
         self.path = kpath(path) if path else kpath(".")
@@ -157,16 +215,15 @@ class Cascade:
 
             assert name not in self.data
 
-            if not cache.is_file() or found or invalidate:
-                self.data[name] = Maybe(cache=cache, skip=found)
-                continue
+            maybe = Maybe(
+                cache=cache,
+                loaded=False,
+                cached=cache.is_file(),
+                skip=found,
+            )
 
-            with cache.open(mode="rb") as fd:
+            self.data[name] = maybe
+
+            if not found and maybe.cached:
                 found = True
-
-                self.data[name] = Maybe(
-                    cache=cache,
-                    data=pickle.load(fd),
-                    loaded=True,
-                    skip=True,
-                )
+                log.info(f"cascade: will resume at {name}")
