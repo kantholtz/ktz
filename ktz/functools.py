@@ -103,6 +103,9 @@ class Cascade:
         if not maybe.cached:
             raise KeyError(f"Cascade: {name} is not cached yet.")
 
+        if maybe.loaded:
+            return maybe.data
+
         with maybe.cache.open(mode="rb") as fd:
             log.info(f"cascade: loading {name} from {maybe.cache.name}")
             cached = pickle.load(fd)
