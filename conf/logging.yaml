@@ -1,0 +1,32 @@
+# configure the desired handlers after loading
+# this config file and the provide it to
+# logging.config.dictConfig
+
+version: 1
+
+formatters:
+
+  standard:
+    format: '[%(asctime)s] %(name)s %(levelname)7s [%(process)5d] | %(message)s'
+    datefmt: '%m.%d | %H:%M:%S'
+
+  plain:
+    format: '[%(asctime)s] %(name)s - %(message)s'
+    datefmt: "%H:%M:%S"
+
+handlers:
+
+  logfile:
+    class: logging.FileHandler
+    formatter: standard
+    filename: ktz.log
+
+  console:
+    class: logging.StreamHandler
+    formatter: standard
+    stream: ext://sys.stdout
+
+loggers:
+  root:
+    level: INFO
+    # handlers: [logfile]
