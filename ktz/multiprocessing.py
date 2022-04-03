@@ -16,6 +16,13 @@ from collections.abc import Iterable
 
 
 log = logging.getLogger(__name__)
+ctx = mp.get_context()
+
+
+# some good reads:
+#   Why threads must not be mixed with forked processes:
+#     - https://rachelbythebay.com/w/2011/06/07/forked/
+#     - https://pythonspeed.com/articles/python-multiprocessing/
 
 
 class Control(enum.Enum):
@@ -25,10 +32,11 @@ class Control(enum.Enum):
     poison = enum.auto()
 
     # inside a group for shutdown
+    # and for management queues (e.g. _q_log)
     eol = enum.auto()
 
 
-class Actor(abc.ABC, mp.Process):
+class Actor(abc.ABC, ctx.Process):
     """
     Process abstraction used with a Relay.
 
@@ -52,6 +60,8 @@ class Actor(abc.ABC, mp.Process):
     initialize an Actor.
 
     """
+
+    group: str
 
     def _add_poison(self):
         poison = self._received_poison
@@ -89,7 +99,7 @@ class Actor(abc.ABC, mp.Process):
             return False
 
     @property
-    def receiver(self):
+    def receiver(self) -> bool:
         """
         Whether the Actor can receive messages.
 
@@ -118,14 +128,14 @@ class Actor(abc.ABC, mp.Process):
         self.log("starting up")
         self.startup()
 
-        self.log("running loop")
+        self.log("running loop", level=logging.DEBUG)
         self.loop()
-        self.log("leaving loop")
+        self.log("leaving loop", level=logging.DEBUG)
 
         if self.sender:
             self._outbox.put(Control.poison)
 
-        self.log("shutting down")
+        self.log("shutting down", level=logging.DEBUG)
         self.shutdown()
         self.log("shut down complete")
 
@@ -155,8 +165,8 @@ class Actor(abc.ABC, mp.Process):
             Log level
 
         """
-        msg = f"[{self._grp_name}] ({self.name}) {msg}"
-        self._log_q.put((self._log_name, level, msg, args))
+        msg = f"[{self.group}] ({self.name}) {msg}"
+        self._q_log.put((self._log_name, level, msg, args))
 
     def send(self, *args, **kwargs):
         """
@@ -205,6 +215,34 @@ class Actor(abc.ABC, mp.Process):
 
     def shutdown(self):
         """Implement as callback after loop()."""
+        pass
+
+
+class Handler(abc.ABC):
+    """
+    Execute code in the main process.
+
+    The handler maintains a queue. After control is given to the relay
+    to handle the Actor's life cycles a handler instance may be used
+    to gain control back in the main process. Note that the user is
+    then responsible to leave the run() method and give control back
+    to the relay to join on the actor processes.
+
+    Usually it is a good idea to send and react to
+    a poison pill (see demo/multiprocessing_relay.py)
+    for an example.
+
+    """
+
+    q: mp.Queue
+
+    def __init__(self):
+        """Create a handler."""
+        self.q = ctx.Queue()
+
+    @abc.abstractmethod
+    def run(self):
+        """Execute code in the main process."""
         pass
 
 
@@ -260,6 +298,7 @@ class Relay:
         self.maxsize = maxsize
 
         self._log = log
+        self._q_log = ctx.Queue()  # log thread communication
 
     def connect(
         self,
@@ -280,7 +319,7 @@ class Relay:
 
         """
 
-        def assure_list(obj):
+        def ensure_list(obj):
             try:
                 return list(iter(obj))
             except TypeError:
@@ -288,7 +327,7 @@ class Relay:
 
         # take all args and prepend them to kwargs
         groups = {f"group-{i}": a for i, a in enumerate(args)} | kwargs
-        groups = {group: assure_list(actors) for group, actors in groups.items()}
+        groups = {group: ensure_list(actors) for group, actors in groups.items()}
 
         # connect pairs of actors by a single queue.
         # the receivers need to know how many poison
@@ -296,12 +335,12 @@ class Relay:
         instances = list(groups.values())
         for sender, receiver in zip(instances, instances[1:]):
 
-            q = mp.Queue(self.maxsize) if self.maxsize else mp.Queue()
+            q = ctx.Queue(self.maxsize) if self.maxsize else ctx.Queue()
 
             for actor in sender:
                 actor._outbox = q
 
-            poison = mp.Value("I", 0)  # I: uint
+            poison = ctx.Value("I", 0)  # I: uint
             for actor in receiver:
                 actor._inbox = q
                 actor._peer_count = len(receiver)
@@ -311,13 +350,14 @@ class Relay:
         self.groups = groups
         log.info(f"relay: maintaining {len(self.groups)} groups")
 
+    # logthread
+
     def _start_logthread(self) -> mp.Queue:
         log.info("relay: starting logthread")
 
         def _log_thread(q):
             while True:
                 data = q.get()
-
                 if data == Control.eol:
                     break
 
@@ -325,46 +365,59 @@ class Relay:
                 log = logging.getLogger(name)
                 log.log(level, msg, *args)
 
-        log_q = mp.Queue()
-        log_t = threading.Thread(target=_log_thread, args=(log_q,))
-        log_t.start()
+        self._t_log = threading.Thread(target=_log_thread, args=(self._q_log,))
+        self._t_log.start()
 
-        return log_t, log_q
+    def _join_logthread(self):
+        log.info("relay: waiting for log thread")
+        self._q_log.put(Control.eol)
+        self._t_log.join()
 
-    def start(self):
-        """
-        Start the relay.
+    # actors
 
-        This spawns all Actor processes and blocks until all these
-        processes terminated.
-
-        """
-        log_t, log_q = self._start_logthread()
-
+    def _start_actors(self):
         log.info("relay: starting processes")
-
         procs = []
 
         for group, actors in self.groups.items():
             for actor in actors:
-                actor._log_q = log_q
+
+                actor._q_log = self._q_log
                 actor._log_name = self._log or actor.__class__.__module__
-                actor._grp_name = group
+                actor.group = group
 
                 actor.start()
                 procs.append(actor)
 
-        log.info(f"relay: waiting for {len(procs)} processes to finish")
+        return procs
 
-        # join fifo like the poison propagates
+    def _join_actors(self, procs: list[Actor]):
+        log.info(f"relay: waiting for {len(procs)} processes to finish")
         while procs:
             proc, procs = procs[0], procs[1:]
+            log.info(f"relay: waiting for {proc.name}")
             proc.join()
 
-        log.info("relay: all processes finished")
+    # lifecycle
 
-        log.info("relay: waiting for log thread")
-        log_q.put(Control.eol)
-        log_t.join()
+    def start(self, handler: Handler = None):
+        """
+        Start the relay.
 
-        log.info("relay: log thread finished")
+        This spawns all Actor processes and blocks until all these
+        processes terminated. If a handler is provided, control is
+        given back to the user in the main process.
+
+        """
+        # processes MUST be started before any threads (when forked)
+        procs = self._start_actors()
+        self._start_logthread()
+
+        if handler:
+            handler.run()
+
+        # wait for processes; join fifo like the poison propagates
+        self._join_actors(procs)
+        self._join_logthread()
+
+        log.info("relay: finished, exiting")

@@ -1,3 +1,5 @@
+# this configuration is used for demo scripts and notebooks
+
 # configure the desired handlers after loading
 # this config file and the provide it to
 # logging.config.dictConfig
@@ -11,7 +13,7 @@ formatters:
     datefmt: '%m.%d | %H:%M:%S'
 
   plain:
-    format: '[%(asctime)s] %(name)s - %(message)s'
+    format: '[%(asctime)s] [%(process)5d] %(name)s - %(message)s'
     datefmt: "%H:%M:%S"
 
 handlers:
