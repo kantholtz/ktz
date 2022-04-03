@@ -43,6 +43,10 @@ class TestCascade:
         # a new run must use the cachefile now
         run = ft.Cascade(path=cachedir, x=cachefile)
 
+        @run.cache("x")
+        def foo():
+            return outside
+
         # from cache
         x = foo()
         assert x == 1
