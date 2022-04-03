@@ -325,6 +325,8 @@ class Relay:
             except TypeError:
                 return [obj]
 
+        assert len(args) + len(kwargs) > 1
+
         # take all args and prepend them to kwargs
         groups = {f"group-{i}": a for i, a in enumerate(args)} | kwargs
         groups = {group: ensure_list(actors) for group, actors in groups.items()}
