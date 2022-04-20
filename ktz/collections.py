@@ -2,15 +2,23 @@
 
 """Tools for working with collection types."""
 
+
+import yaml
+
 import logging
 from itertools import count
+from functools import partial
 from collections import defaultdict
+
+from pathlib import Path
+from ktz.filesystem import path as kpath
 
 from typing import Any
 from typing import Union
 from typing import Callable
 from typing import Optional
 
+from collections.abc import Mapping
 from collections.abc import Iterable
 from collections.abc import Generator
 from collections.abc import Collection
@@ -219,3 +227,48 @@ class Incrementer(dict):
 
         """
         self._frozen = False
+
+
+# --
+
+
+def merge(d1: Mapping, d2: Mapping):
+    """
+    Merge two mappings recursively.
+
+    Values of the the second mapping overwrite the former
+    unless they are set to None.
+
+    """
+    for k, v in d2.items():
+        if k in d1 and v is None:
+            continue
+
+        if k not in d1 or type(v) is not dict:
+            d1[k] = v
+
+        else:
+            merge(d1[k] or {}, d2[k])
+
+
+def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
+    """
+    Load and join configurations from yaml and kwargs.
+
+    First, all provided configuration files are loaded
+    and joined together. Afterwards, all provided kwargs
+    overwrite the joined configuration dict.
+
+    """
+    as_path = partial(kpath, is_file=True, message="loading {path_abbrv}")
+
+    # first join all yaml configs into one dictionary;
+    # later dictionaries overwrite earlier ones
+    result = {}
+    for path in map(as_path, configs):
+        with path.open(mode="r") as fd:
+            new = yaml.safe_load(fd)
+            merge(result, new)
+
+    merge(result, overwrites)
+    return result
