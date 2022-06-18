@@ -232,14 +232,15 @@ class Incrementer(dict):
 # --
 
 
-def merge(d1: Mapping, d2: Mapping):
+def dmerge(d1: Mapping, d2: Mapping):
     """
-    Merge two mappings recursively.
+    Deeply Merge two mappings.
 
     Values of the the second mapping overwrite the former
     unless they are set to None.
 
     """
+    d1 = d1.copy()
     for k, v in d2.items():
         if k in d1 and v is None:
             continue
@@ -248,7 +249,9 @@ def merge(d1: Mapping, d2: Mapping):
             d1[k] = v
 
         else:
-            merge(d1[k] or {}, d2[k])
+            d1[k] = dmerge(d1[k] or {}, d2[k])
+
+    return d1
 
 
 def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
@@ -268,7 +271,11 @@ def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
     for path in map(as_path, configs):
         with path.open(mode="r") as fd:
             new = yaml.safe_load(fd)
-            merge(result, new)
 
-    merge(result, overwrites)
-    return result
+            if new is None:
+                log.warn(f"{fd.name} is empty!")
+                new = {}
+
+            result = dmerge(result, new)
+
+    return dmerge(result, overwrites)
