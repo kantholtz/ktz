@@ -3,26 +3,17 @@
 """Tools for working with collection types."""
 
 
+import logging
+from collections import defaultdict
+from collections.abc import Collection, Generator, Iterable, Mapping
+from functools import partial
+from itertools import count
+from pathlib import Path
+from typing import Any, Callable, Optional, Union
+
 import yaml
 
-import logging
-from itertools import count
-from functools import partial
-from collections import defaultdict
-
-from pathlib import Path
 from ktz.filesystem import path as kpath
-
-from typing import Any
-from typing import Union
-from typing import Callable
-from typing import Optional
-
-from collections.abc import Mapping
-from collections.abc import Iterable
-from collections.abc import Generator
-from collections.abc import Collection
-
 
 log = logging.getLogger(__name__)
 
@@ -230,6 +221,54 @@ class Incrementer(dict):
 
 
 # --
+
+
+def drslv(
+    dic: dict,
+    chain: str,
+    sep: str = " ",
+    skiplast: Optional[int] = None,
+    default: Any = KeyError,
+):
+    """
+    with sep="." and skiplast=0
+    foo.bar.baz -> dic['foo']['bar']['baz']
+    """
+    crumbs = chain.split(sep)
+    if skiplast:  # neither None nor 0
+        crumbs = crumbs[:-skiplast]
+
+    try:
+        for key in crumbs:
+            dic = dic[key]
+    except KeyError as err:
+        if default == KeyError:
+            raise err
+
+        return default
+
+    return dic
+
+
+def dflat(dic, sep: str = " "):
+    """
+    Flatten a deep dictionary with string keys.
+    """
+
+    def r(src, tar, trail):
+        for k, v in src.items():
+            assert isinstance(k, str)
+
+            k = f"{trail}{sep}{k}" if trail else k
+
+            if isinstance(v, dict):
+                r(v, tar, k)
+            else:
+                tar[k] = v
+
+        return tar
+
+    return r(dic, {}, None)
 
 
 def dmerge(d1: Mapping, d2: Mapping):
