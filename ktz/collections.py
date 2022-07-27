@@ -250,25 +250,34 @@ def drslv(
     return dic
 
 
-def dflat(dic, sep: str = " "):
+def dflat(dic, sep: str = " ", only: Optional[int] = None):
     """
     Flatten a deep dictionary with string keys.
     """
 
-    def r(src, tar, trail):
+    def descend(v, depth):
+        if not isinstance(v, dict):
+            return False
+
+        if only and depth < only:
+            return True
+
+        return False
+
+    def r(src: dict, tar: dict, trail: str, depth: int):
         for k, v in src.items():
             assert isinstance(k, str)
 
             k = f"{trail}{sep}{k}" if trail else k
 
-            if isinstance(v, dict):
-                r(v, tar, k)
+            if descend(v, depth):
+                r(v, tar, k, depth + 1)
             else:
                 tar[k] = v
 
         return tar
 
-    return r(dic, {}, None)
+    return r(dic, {}, None, 1)
 
 
 def dmerge(d1: Mapping, d2: Mapping):
