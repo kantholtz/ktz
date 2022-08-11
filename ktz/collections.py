@@ -259,7 +259,7 @@ def dflat(dic, sep: str = " ", only: Optional[int] = None):
         if not isinstance(v, dict):
             return False
 
-        if only and depth < only:
+        if only is None or depth < only:
             return True
 
         return False
