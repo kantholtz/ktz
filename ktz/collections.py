@@ -226,7 +226,7 @@ class Incrementer(dict):
 def drslv(
     dic: Mapping,
     chain: str,
-    sep: str = " ",
+    sep: str = ".",
     skiplast: Optional[int] = None,
     default: Any = KeyError,
 ):
@@ -271,7 +271,11 @@ def drslv(
     return dic
 
 
-def dflat(dic, sep: str = " ", only: Optional[int] = None):
+def dflat(
+    dic,
+    sep: str = ".",
+    only: Optional[int] = None,
+):
     """Flatten a deep dictionary with string keys.
 
     Takes a deeply nested dictionary and flattens it by concatenating
