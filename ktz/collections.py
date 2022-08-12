@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
 """Tools for working with collection types."""
 
 
+import copy
 import logging
 from collections import defaultdict
 from collections.abc import Collection, Generator, Iterable, Mapping
@@ -55,7 +55,7 @@ def buckets(
 
     Returns
     -------
-    Union[dict[B, list[C]], dict[B, D]]
+    Union[Mapping[B, list[C]], Mapping[B, D]]
         A dictionary which maps bucket identifieres to their data
 
     Examples
@@ -81,7 +81,7 @@ def buckets(
 
 
 def unbucket(
-    buckets: dict[A, list[B]],
+    buckets: Mapping[A, list[B]],
 ) -> list[tuple[A, B]]:
     """
     Flattens a bucket dictionary.
@@ -91,7 +91,7 @@ def unbucket(
 
     Parameters
     ----------
-    buckets : dict[A, list[B]]
+    buckets : Mapping[A, list[B]]
         Bucket dictionary
 
     Returns
@@ -123,8 +123,8 @@ def flat(
 ) -> Generator[A, None, None]:
     """Flattens a collection.
 
-    Consumes the given iterable and flattens it up to n level deep or
-    completely.
+    Consumes the given iterable and flattens it up to
+    n levels deep or completely.
 
     Parameters
     ----------
@@ -224,15 +224,36 @@ class Incrementer(dict):
 
 
 def drslv(
-    dic: dict,
+    dic: Mapping,
     chain: str,
     sep: str = " ",
     skiplast: Optional[int] = None,
     default: Any = KeyError,
 ):
     """
-    with sep="." and skiplast=0
-    foo.bar.baz -> dic['foo']['bar']['baz']
+    Resolve string trails in deep dictionaries.
+
+    For example, with sep="." and skiplast=0
+    foo.bar.baz -> dic['foo']['bar']['baz']. Setting
+    skiplast=1 would return dic['foo']['bar'] = {'baz': ...}
+
+    Parameters:
+    -----------
+    dic : Mapping
+        Data to be looked up
+    chain : str
+        Query string
+    sep : str
+        How the chain needs to be split
+    skiplast : Optional[int]
+        Only look up to the provided depth
+    default : Any
+        For missing keys; defaults to raising a KeyError
+
+    Examples
+    --------
+    FIXME: Add docs.
+
     """
     crumbs = chain.split(sep)
     if skiplast:  # neither None nor 0
@@ -251,12 +272,30 @@ def drslv(
 
 
 def dflat(dic, sep: str = " ", only: Optional[int] = None):
-    """
-    Flatten a deep dictionary with string keys.
+    """Flatten a deep dictionary with string keys.
+
+    Takes a deeply nested dictionary and flattens it by concatenating
+    its keys using the provided separator. For example a dictionary
+    d['foo']['bar'] = 3 becomes d['foo.bar'] = 3. Keys are transformed
+    to strings either by __str__ or __repr__ if __str__ is not defined.
+
+    Parameters
+    ----------
+    dic : Mapping[str, XXXX]
+        The dictionary to be flattened
+    sep : str
+        Separator to concatenate the keys with
+    only : Optional[int]
+        Stops flattening after the provided depth
+
+    Examples
+    --------
+    FIXME: Add docs.
+
     """
 
     def descend(v, depth):
-        if not isinstance(v, dict):
+        if not isinstance(v, Mapping):
             return False
 
         if only is None or depth < only:
@@ -264,7 +303,7 @@ def dflat(dic, sep: str = " ", only: Optional[int] = None):
 
         return False
 
-    def r(src: dict, tar: dict, trail: str, depth: int):
+    def r(src: Mapping, tar: Mapping, trail: str, depth: int):
         for k, v in src.items():
             assert isinstance(k, str)
 
@@ -280,26 +319,46 @@ def dflat(dic, sep: str = " ", only: Optional[int] = None):
     return r(dic, {}, None, 1)
 
 
-def dmerge(d1: Mapping, d2: Mapping):
+def dmerge(*ds: Mapping):
     """
-    Deeply Merge two mappings.
+    Deeply merge mappings.
 
-    Values of the the second mapping overwrite the former
-    unless they are set to None.
+    A new deep copy is created from the keys and values from the
+    provided mappings. Values of the the next mapping overwrite the
+    former unless they are set to None.
+
+    Parameters
+    ----------
+    ds : Mapping
+        Deep mappings to be merged
+
+    Examples
+    --------
+    FIXME: Add docs.
 
     """
-    d1 = d1.copy()
-    for k, v in d2.items():
-        if k in d1 and v is None:
-            continue
+    if len(ds) == 0:
+        return {}
 
-        if k not in d1 or type(v) is not dict:
-            d1[k] = v
+    if len(ds) == 1:
+        return copy.deepcopy(ds[0])
 
-        else:
-            d1[k] = dmerge(d1[k] or {}, d2[k])
+    work = list(ds)
+    last = work.pop()
+    while work:
+        curr = work.pop().copy()
+        for k, v in last.items():
+            if k in curr and v is None:
+                continue
 
-    return d1
+            if k not in curr or not isinstance(v, Mapping):
+                curr[k] = v
+
+            else:
+                curr[k] = dmerge(curr[k] or {}, last[k])
+
+        last = curr
+    return curr
 
 
 def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
@@ -311,19 +370,14 @@ def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
     overwrite the joined configuration dict.
 
     """
-    as_path = partial(kpath, is_file=True, message="loading {path_abbrv}")
+    as_path = partial(kpath, is_file=True)
 
     # first join all yaml configs into one dictionary;
     # later dictionaries overwrite earlier ones
-    result = {}
+    loaded = []
     for path in map(as_path, configs):
         with path.open(mode="r") as fd:
-            new = yaml.safe_load(fd)
+            loaded.append(yaml.safe_load(fd) or {})
 
-            if new is None:
-                log.warn(f"{fd.name} is empty!")
-                new = {}
-
-            result = dmerge(result, new)
-
-    return dmerge(result, overwrites)
+    work = loaded + [overwrites]
+    return dmerge(*work)

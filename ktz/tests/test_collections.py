@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import yaml
-import pytest
 import tempfile
-
 from contextlib import ExitStack
 
-from ktz.collections import flat
-from ktz.collections import ryaml
-from ktz.collections import merge
-from ktz.collections import buckets
-from ktz.collections import unbucket
-from ktz.collections import Incrementer
+import pytest
+import yaml
+
+from ktz.collections import Incrementer, buckets, dmerge, flat, ryaml, unbucket
 
 
 class TestBuckets:
@@ -142,28 +137,40 @@ class TestMerge:
         d1 = dict(foo=1, bar=2)
         d2 = dict(foo=3, xyz=4)
 
-        merge(d1, d2)
-        assert d1 == dict(foo=3, bar=2, xyz=4)
+        res = dmerge(d1, d2)
+        assert res == dict(foo=3, bar=2, xyz=4)
 
     def test_merge_none(self):
         d1 = dict(foo=1, bar=2)
         d2 = dict(foo=None, xyz=4)
 
-        merge(d1, d2)
-        assert d1 == dict(foo=1, bar=2, xyz=4)
+        res = dmerge(d1, d2)
+        assert res == dict(foo=1, bar=2, xyz=4)
 
     def test_merge_deep(self):
         d1 = dict(foo=dict(a=1, b=2), bar=3)
         d2 = dict(foo=dict(a=3, c=4), xyz=5)
 
-        merge(d1, d2)
-        assert d1 == dict(foo=dict(a=3, b=2, c=4), bar=3, xyz=5)
+        res = dmerge(d1, d2)
+        assert res == dict(foo=dict(a=3, b=2, c=4), bar=3, xyz=5)
+
+    def test_merge_multiple(self):
+        d1 = dict(foo=1, d1=1)
+        d2 = dict(foo=3, xyz=4, d2=2)
+        d3 = dict(foo=5, xyz=6, d3=3)
+
+        res = dmerge(d1, d2, d3)
+        assert res == dict(foo=5, xyz=6, d1=1, d2=2, d3=3)
 
 
 class TestRyaml:
     def test_noargs(self):
         ret = ryaml()
         assert ret == {}
+
+    def test_only_overwrites(self):
+        ret = ryaml(foo=1)
+        assert ret == dict(foo=1)
 
     def test_single(self):
         d1 = dict(foo=1, bar=2)
