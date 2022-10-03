@@ -6,7 +6,8 @@ from contextlib import ExitStack
 import pytest
 import yaml
 
-from ktz.collections import Incrementer, buckets, dmerge, flat, ryaml, unbucket
+from ktz.collections import (Incrementer, buckets, dflat, dmerge, drslv, flat,
+                             ryaml, unbucket)
 
 
 class TestBuckets:
@@ -132,35 +133,164 @@ class TestIncrementer:
         assert incr["b"] == 1
 
 
-class TestMerge:
-    def test_merge_flat(self):
+class TestDMerge:
+    def test_flat(self):
         d1 = dict(foo=1, bar=2)
         d2 = dict(foo=3, xyz=4)
 
         res = dmerge(d1, d2)
         assert res == dict(foo=3, bar=2, xyz=4)
 
-    def test_merge_none(self):
+    def test_none(self):
         d1 = dict(foo=1, bar=2)
         d2 = dict(foo=None, xyz=4)
 
         res = dmerge(d1, d2)
         assert res == dict(foo=1, bar=2, xyz=4)
 
-    def test_merge_deep(self):
+    def test_empty(self):
+        res = dmerge()
+        assert res == {}
+
+    def test_deep(self):
         d1 = dict(foo=dict(a=1, b=2), bar=3)
         d2 = dict(foo=dict(a=3, c=4), xyz=5)
 
         res = dmerge(d1, d2)
         assert res == dict(foo=dict(a=3, b=2, c=4), bar=3, xyz=5)
 
-    def test_merge_multiple(self):
+    def test_multiple(self):
         d1 = dict(foo=1, d1=1)
         d2 = dict(foo=3, xyz=4, d2=2)
         d3 = dict(foo=5, xyz=6, d3=3)
 
         res = dmerge(d1, d2, d3)
         assert res == dict(foo=5, xyz=6, d1=1, d2=2, d3=3)
+
+
+class TestDFlat:
+    def test_empty(self):
+        res = dflat({})
+        assert res == {}
+
+    def test_simple(self):
+        res = dflat(dict(foo=1, bar=2))
+        assert res == dict(foo=1, bar=2)
+
+    def test_deep(self):
+        d = {
+            "1": {
+                "1": {
+                    "1": "1.1.1",
+                    "2": "1.1.2",
+                },
+                "2": {
+                    "1": "1.2.1",
+                },
+            },
+            "2": {
+                "1": "2.1",
+            },
+        }
+
+        res = dflat(d)
+        assert res == {
+            "1.1.1": "1.1.1",
+            "1.1.2": "1.1.2",
+            "1.2.1": "1.2.1",
+            "2.1": "2.1",
+        }
+
+    def test_only(self):
+        d = {
+            "1": {
+                "1": {
+                    "1": "1.1.1",
+                    "2": "1.1.2",
+                },
+                "2": {
+                    "1": "1.2.1",
+                },
+            },
+            "2": {
+                "1": "2.1",
+            },
+        }
+
+        res = dflat(d, only=2)
+        assert res == {
+            "1.1": {"1": "1.1.1", "2": "1.1.2"},
+            "1.2": {"1": "1.2.1"},
+            "2.1": "2.1",
+        }
+
+    def test_sep(self):
+        d = {"1": {"1": "1.1"}}
+        res = dflat(d, sep=" ")
+        assert res == {"1 1": "1.1"}
+
+
+class TestDRslv:
+    def test_empty_dic(self):
+        d = {}
+
+        # defaults to a key error
+        with pytest.raises(KeyError):
+            drslv(d, "foo")
+
+        res = drslv(d, "foo", default=None)
+        assert res is None
+
+    def test_small(self):
+        d = dict(foo=dict(bar="deep"), flat="flat")
+
+        res = drslv(d, "flat")
+        assert res == "flat"
+
+        res = drslv(d, "foo.bar")
+        assert res == "deep"
+
+    def test_sep(self):
+        d = dict(foo=dict(bar="deep"), flat="flat")
+
+        res = drslv(d, "foo bar", sep=" ")
+        assert res == "deep"
+
+    def test_collapse(self):
+        d = {
+            "1": {
+                "1": {
+                    "1": "1.1.1",
+                    "2": "1.1.2",
+                },
+                "2": {
+                    "1": "1.2.1",
+                },
+            },
+        }
+
+        res = drslv(d, "1.1.1")
+        assert res == "1.1.1"
+
+        res = drslv(d, "1.1.1", collapse=1)
+        assert res == {"1": "1.1.1", "2": "1.1.2"}
+
+        res = drslv(d, "1.1.1", collapse=2)
+        assert res == {"1": {"1": "1.1.1", "2": "1.1.2"}, "2": {"1": "1.2.1"}}
+
+        res = drslv(d, "1.1", collapse=1)
+        assert res == {"1": {"1": "1.1.1", "2": "1.1.2"}, "2": {"1": "1.2.1"}}
+
+        with pytest.raises(KeyError):
+            res = drslv(d, "1.1.3", collapse=2)
+
+    def test_deprecated_skiplast(self):
+        d = {"1": {"1": {"1": "1.1.1", "2": "1.1.2"}}}
+
+        # skiplast
+        with pytest.deprecated_call():
+            res = drslv(d, "1.1.1", skiplast=1)
+            assert res == {"1": "1.1.1", "2": "1.1.2"}
 
 
 class TestRyaml:

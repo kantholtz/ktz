@@ -4,6 +4,7 @@
 
 import copy
 import logging
+import warnings
 from collections import defaultdict
 from collections.abc import Collection, Generator, Iterable, Mapping
 from functools import partial
@@ -227,15 +228,17 @@ def drslv(
     dic: Mapping,
     chain: str,
     sep: str = ".",
-    skiplast: Optional[int] = None,
     default: Any = KeyError,
+    collapse: Optional[int] = None,
+    # deprecated: use collapse
+    skiplast: Optional[int] = None,
 ):
     """
     Resolve string trails in deep dictionaries.
 
-    For example, with sep="." and skiplast=0
+    For example, with sep="." and collapse=0
     foo.bar.baz -> dic['foo']['bar']['baz']. Setting
-    skiplast=1 would return dic['foo']['bar'] = {'baz': ...}
+    collapse=1 would return dic['foo']['bar'] = {'baz': ...}
 
     Parameters:
     -----------
@@ -245,38 +248,69 @@ def drslv(
         Query string
     sep : str
         How the chain needs to be split
-    skiplast : Optional[int]
-        Only look up to the provided depth
+    collapse : Optional[int]
+        Return an n-level deep dict instead
     default : Any
         For missing keys; defaults to raising a KeyError
 
     Examples
     --------
-    FIXME: Add docs.
+    >>> from ktz.collections import drslv
+    >>> dic = dict(foo=dict(bar=dict(a=1,b=2),c=3),d=4)
+    >>> drslv(dic, 'foo.bar.a')
+    1
+    >>> drslv(dic, 'foo bar a', sep=' ')
+    1
+    >>> drslv(dic, 'foo.bar.a', collapse=1)
+    {'a': 1, 'b': 2}
+    >>> drslv(dic, 'not.there')
+    Traceback (most recent call last):
+      Input In [15] in <cell line: 1>
+        drslv(dic, 'not.there')
+      File ~/Complex/scm/ktz/ktz/collections.py:267 in drslv
+        raise err
+      File ~/Complex/scm/ktz/ktz/collections.py:264 in drslv
+        dic = dic[key]
+    KeyError: 'not'
+
+    >>> drslv(dic, 'not.there', default=None)
+    >>> drslv(dic, 'not.there', default=1)
+    1
 
     """
+    if skiplast:
+        warnings.warn(
+            "'skiplast' is deprecated; use 'collapse' instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        collapse = skiplast
+
     crumbs = chain.split(sep)
-    if skiplast:  # neither None nor 0
-        crumbs = crumbs[:-skiplast]
 
     try:
+        trail = []
         for key in crumbs:
+            trail.append(dic)
             dic = dic[key]
+
     except KeyError as err:
         if default == KeyError:
             raise err
 
         return default
 
-    return dic
+    return trail[-collapse] if collapse else dic
 
 
 def dflat(
     dic,
     sep: str = ".",
     only: Optional[int] = None,
+    # skiplast: Optional[int] = None, TODO add skiplast
 ):
-    """Flatten a deep dictionary with string keys.
+    """
+    Flatten a deep dictionary with string keys.
 
     Takes a deeply nested dictionary and flattens it by concatenating
     its keys using the provided separator. For example a dictionary
@@ -294,7 +328,14 @@ def dflat(
 
     Examples
     --------
-    FIXME: Add docs.
+    >>> from ktz.collections import dflat
+    >>> dic = dict(foo=dict(bar=dict(a=1,b=2),c=3),d=4)
+    >>> dflat(dic)
+    {'foo.bar.a': 1, 'foo.bar.b': 2, 'foo.c': 3, 'd': 4}
+    >>> dflat(dic, sep=' ')
+    {'foo bar a': 1, 'foo bar b': 2, 'foo c': 3, 'd': 4}
+    >>> dflat(dic, only=2)
+    {'foo.bar': {'a': 1, 'b': 2}, 'foo.c': 3, 'd': 4}
 
     """
 
@@ -307,20 +348,20 @@ def dflat(
 
         return False
 
-    def r(src: Mapping, tar: Mapping, trail: str, depth: int):
+    def rec(src: Mapping, tar: Mapping, trail: str, depth: int):
         for k, v in src.items():
             assert isinstance(k, str)
 
             k = f"{trail}{sep}{k}" if trail else k
 
             if descend(v, depth):
-                r(v, tar, k, depth + 1)
+                rec(v, tar, k, depth + 1)
             else:
                 tar[k] = v
 
         return tar
 
-    return r(dic, {}, None, 1)
+    return rec(dic, {}, None, 1)
 
 
 def dmerge(*ds: Mapping):
