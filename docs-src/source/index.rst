@@ -84,6 +84,16 @@ Module Overview
      Unbucket buckets
    * :func:`ktz.collections.flat`
      Flatten collections to desired depth
+   * :func:`ktz.collections.Incrementer`
+     Auto-assign unique ids
+   * :func:`ktz.collections.drslv`
+     Resolve string trails in deep dictionaries
+   * :func:`ktz.collections.dflat`
+     Flatten deep dictionaries
+   * :func:`ktz.collections.dmerge`
+     Merge deep dictionaries
+   * :func:`ktz.collections.ryaml`
+     Load and join yaml files
 
 .. topic:: Dataclasses
 
@@ -100,6 +110,20 @@ Module Overview
      Keep n previous versions of a file or directory
    * :func:`ktz.filesystem.git_hash`
      Obtain the current git hash
+
+.. topic:: Functools
+
+   * :class:`ktz.functools.Cascade`
+     Cascade of functions with caching
+
+.. topic:: Multiprocessing
+
+   * :class:`ktz.multiprocessing.Actor`
+     Process abstraction to be used with a Relay
+   * :class:`ktz.multiprocessing.Handler`
+     Execute code in the Relay's main process
+   * :class:`ktz.multiprocessing.Relay`
+     Wire Actors together and control the life-cycle
 
 .. topic:: String
 
