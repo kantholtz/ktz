@@ -307,7 +307,7 @@ def dflat(
     dic,
     sep: str = ".",
     only: Optional[int] = None,
-    # skiplast: Optional[int] = None, TODO add skiplast
+    # skiplast: Optional[int] = None,
 ):
     """
     Flatten a deep dictionary with string keys.
@@ -325,6 +325,8 @@ def dflat(
         Separator to concatenate the keys with
     only : Optional[int]
         Stops flattening after the provided depth
+    skiplast : Optional[int]
+        Do not flatten up to n hops from each leaf
 
     Examples
     --------
@@ -348,20 +350,18 @@ def dflat(
 
         return False
 
-    def rec(src: Mapping, tar: Mapping, trail: str, depth: int):
+    def rec(src: Mapping, tar: Mapping, trail: list[str]):
         for k, v in src.items():
-            assert isinstance(k, str)
-
-            k = f"{trail}{sep}{k}" if trail else k
-
-            if descend(v, depth):
-                rec(v, tar, k, depth + 1)
+            subtrail = trail + [str(k)]
+            if descend(v, len(subtrail)):
+                rec(v, tar, subtrail)
             else:
-                tar[k] = v
+                tar[sep.join(subtrail)] = v
 
         return tar
 
-    return rec(dic, {}, None, 1)
+    # step 1: flatten completely
+    return rec(dic, {}, [])
 
 
 def dmerge(*ds: Mapping):

@@ -229,6 +229,41 @@ class TestDFlat:
         res = dflat(d, sep=" ")
         assert res == {"1 1": "1.1"}
 
+    # TODO release 0.3
+    # def test_skiplast(self):
+    #     d = {
+    #         "1": {
+    #             "1": {
+    #                 "1": "1.1.1",
+    #                 "2": "1.1.2",
+    #             },
+    #             "2": {
+    #                 "1": "1.2.1",
+    #             },
+    #         },
+    #         "2": {
+    #             "1": "2.1",
+    #         },
+    #     }
+
+    #     res = dflat(d, skiplast=0)
+    #     assert res == dflat(d)
+
+    #     res = dflat(d, skiplast=1)
+    #     assert res == {
+    #         "1.1": {
+    #             "1": "1.1.1",
+    #             "2": "1.1.2",
+    #         },
+    #         "1.2": {
+    #             "1": "1.2.1",
+    #         },
+    #         "2.1": "2.1",
+    #     }
+
+    #     res = dflat(d, skiplast=2)
+    #     assert res == d
+
 
 class TestDRslv:
     def test_empty_dic(self):
