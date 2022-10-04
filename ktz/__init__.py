@@ -3,7 +3,7 @@
 """KTZ Python Tools."""
 
 
-__version__ = "0.2.0rc0"
+__version__ = "0.2.0"
 
 
 class Error(Exception):
