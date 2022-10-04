@@ -11,15 +11,6 @@ gathered which is used throughout my different projects. Although this
 mostly meant to be my own personal toolkit, maybe you find interesting
 things to use too. Pull requests, questions etc. are always welcome!
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   ktz-collections
-   ktz-dataclasses
-   ktz-filesystem
-   ktz-string
-
 
 Indices and Tables
 ------------------
@@ -133,3 +124,16 @@ Module Overview
      Decode a bytestring with custom mappers
    * :func:`ktz.string.args_hash`
      Create a unique and persistent hash from args
+
+.. collapse:: Table of Contents
+
+    .. toctree::
+        :maxdepth: 2
+        :caption: Contents:
+
+        ktz-collections
+        ktz-dataclasses
+        ktz-filesystem
+        ktz-functools
+        ktz-multiprocessing
+        ktz-string

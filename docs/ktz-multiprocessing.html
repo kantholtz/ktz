@@ -1,0 +1,813 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Multiprocessing &#8212; KTZ Python Tools 0.2.0 documentation</title>
+  <script>
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=9b1a4fa89bdd0e95b23b" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=9b1a4fa89bdd0e95b23b" rel="stylesheet">
+
+  
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/6.1.2/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=9b1a4fa89bdd0e95b23b">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ktz-multiprocessing';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="String" href="ktz-string.html" />
+    <link rel="prev" title="Functools" href="ktz-functools.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fas fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">KTZ Python Tools 0.2.0 documentation</p>
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-collections.html">
+                        Collections
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-dataclasses.html">
+                        Dataclasses
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-filesystem.html">
+                        Filesystem
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-functools.html">
+                        Functools
+                    </a>
+                </li>
+                
+
+                <li class="nav-item current active">
+                    <a class="nav-link" href="#">
+                        Multiprocessing
+                    </a>
+                </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-string.html">
+                        String
+                    </a>
+                </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      <div class="navbar-end-item navbar-end__search-button-container">
+        
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search">
+  <i class="fas fa-search"></i>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <span class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  <div class="search-button-container--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search">
+  <i class="fas fa-search"></i>
+</button>
+  </div>
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fas fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-collections.html">
+                        Collections
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-dataclasses.html">
+                        Dataclasses
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-filesystem.html">
+                        Filesystem
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-functools.html">
+                        Functools
+                    </a>
+                </li>
+                
+
+                <li class="nav-item current active">
+                    <a class="nav-link" href="#">
+                        Multiprocessing
+                    </a>
+                </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-string.html">
+                        String
+                    </a>
+                </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <span class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+      </div>
+      <main class="bd-main">
+        
+        
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+            </div>
+            
+            
+            <article class="bd-article" role="main">
+              
+  <section id="module-ktz.multiprocessing">
+<span id="multiprocessing"></span><h1>Multiprocessing<a class="headerlink" href="#module-ktz.multiprocessing" title="Permalink to this heading">#</a></h1>
+<p>Multiprocessing goodies.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.multiprocessing.</span></span><span class="sig-name descname"><span class="pre">Actor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">daemon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor" title="Permalink to this definition">#</a></dt>
+<dd><p>Process abstraction used with a Relay.</p>
+<p>Actor instances are wired together using
+a Relay and then send messages to each other.
+Each actor is spawned in a separate process.
+Please see Relay to understand their usage.</p>
+<ul class="simple">
+<li><p>Actors who are senders may invoke send()</p></li>
+<li><p>Actors who receivers must implement recv()</p></li>
+<li><p>Actors who are not receivers must implement loop()</p></li>
+</ul>
+<p>There are callback functions invoked at various
+stages of an Actor’s lifecycle (implemented in run()):</p>
+<ul class="simple">
+<li><p>startup(): Before loop()</p></li>
+<li><p>loop(): Must be overwritten if not receiver</p></li>
+<li><p>shutdown(): After loop()</p></li>
+</ul>
+<p>Actors MUST not be iterable! A Relay is required to properly
+initialize an Actor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>authkey</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">daemon</span></code></dt><dd><p>Return whether process is a daemon</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">exitcode</span></code></dt><dd><p>Return exit code of process or <cite>None</cite> if it has yet to stop</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ident</span></code></dt><dd><p>Return identifier (PID) of process or <cite>None</cite> if it has yet to start</p>
+</dd>
+<dt><strong>name</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">pid</span></code></dt><dd><p>Return identifier (PID) of process or <cite>None</cite> if it has yet to start</p>
+</dd>
+<dt><a class="reference internal" href="#ktz.multiprocessing.Actor.receiver" title="ktz.multiprocessing.Actor.receiver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">receiver</span></code></a></dt><dd><p>Whether the Actor can receive messages.</p>
+</dd>
+<dt><a class="reference internal" href="#ktz.multiprocessing.Actor.sender" title="ktz.multiprocessing.Actor.sender"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sender</span></code></a></dt><dd><p>Whether the actor can send messages.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">sentinel</span></code></dt><dd><p>Return a file descriptor (Unix) or handle (Windows) suitable for waiting for process termination.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
+<td><p>Close the Process object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
+<td><p>Return whether process is alive</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
+<td><p>Wait until child process terminates</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
+<td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.multiprocessing.Actor.log" title="ktz.multiprocessing.Actor.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(msg, *args[, level])</p></td>
+<td><p>Log in main process.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ktz.multiprocessing.Actor.loop" title="ktz.multiprocessing.Actor.loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loop</span></code></a>()</p></td>
+<td><p>Keep the Actor alive.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.multiprocessing.Actor.run" title="ktz.multiprocessing.Actor.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<td><p>Control an Actor's lifecycle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ktz.multiprocessing.Actor.send" title="ktz.multiprocessing.Actor.send"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Send a message to consuming actors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.multiprocessing.Actor.shutdown" title="ktz.multiprocessing.Actor.shutdown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shutdown</span></code></a>()</p></td>
+<td><p>Implement as callback after loop().</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
+<td><p>Start child process</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.multiprocessing.Actor.startup" title="ktz.multiprocessing.Actor.startup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">startup</span></code></a>()</p></td>
+<td><p>Implement as callback before loop().</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
+<td><p>Terminate process; sends SIGTERM signal or uses TerminateProcess()</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor.log" title="Permalink to this definition">#</a></dt>
+<dd><p>Log in main process.</p>
+<p>Logging is not process-safe. As such a thread
+in the parent process handles logging and this
+function handles communication with this thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>msg</strong><span class="classifier">str</span></dt><dd><p>Log message</p>
+</dd>
+<dt><strong>level</strong><span class="classifier">int</span></dt><dd><p>Log level</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.loop">
+<span class="sig-name descname"><span class="pre">loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor.loop" title="Permalink to this definition">#</a></dt>
+<dd><p>Keep the Actor alive.</p>
+<p>This function needs to be overwritten if the
+Actor is not a receiver. Handles message passing
+otherwise.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.receiver">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receiver</span></span><a class="headerlink" href="#ktz.multiprocessing.Actor.receiver" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether the Actor can receive messages.</p>
+<p>If the Actor is first in a Relay it has
+no senders attached which can send it
+messages. Such Actors must implement a
+loop() which decides their lifetime and
+must not implement recv().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Control an Actor’s lifecycle.</p>
+<p>Implementation of mp.Process.run. It is not invoked
+directly but called through Process.start() in a
+Relay.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor.send" title="Permalink to this definition">#</a></dt>
+<dd><p>Send a message to consuming actors.</p>
+<p>The recv() handler of any one of the receiving
+Actors is called with the provided args and kwargs.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.sender">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sender</span></span><a class="headerlink" href="#ktz.multiprocessing.Actor.sender" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether the actor can send messages.</p>
+<p>If the Actor is last in a Relay it has
+no recipient and thus can not send messages.
+If Actor.sender is True, the send() message
+can be invoked.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor.shutdown" title="Permalink to this definition">#</a></dt>
+<dd><p>Implement as callback after loop().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Actor.startup">
+<span class="sig-name descname"><span class="pre">startup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Actor.startup" title="Permalink to this definition">#</a></dt>
+<dd><p>Implement as callback before loop().</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Control">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.multiprocessing.</span></span><span class="sig-name descname"><span class="pre">Control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Control" title="Permalink to this definition">#</a></dt>
+<dd><p>Internally used control messages.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Handler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.multiprocessing.</span></span><span class="sig-name descname"><span class="pre">Handler</span></span><a class="headerlink" href="#ktz.multiprocessing.Handler" title="Permalink to this definition">#</a></dt>
+<dd><p>Execute code in the main process.</p>
+<p>The handler maintains a queue. After control is given to the relay
+to handle the Actor’s life cycles a handler instance may be used
+to gain control back in the main process. Note that the user is
+then responsible to leave the run() method and give control back
+to the relay to join on the actor processes.</p>
+<p>Usually it is a good idea to send and react to
+a poison pill (see demo/multiprocessing_relay.py)
+for an example.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.multiprocessing.Handler.run" title="ktz.multiprocessing.Handler.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<td><p>Execute code in the main process.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Handler.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Handler.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Execute code in the main process.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Relay">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.multiprocessing.</span></span><span class="sig-name descname"><span class="pre">Relay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Relay" title="Permalink to this definition">#</a></dt>
+<dd><p>Wire Actors together.</p>
+<p>Control backpressure with maxsize.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.multiprocessing.Relay.connect" title="ktz.multiprocessing.Relay.connect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Connect Actors to form a processing pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ktz.multiprocessing.Relay.start" title="ktz.multiprocessing.Relay.start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code></a>([handler])</p></td>
+<td><p>Start the relay.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Relay.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Relay.connect" title="Permalink to this definition">#</a></dt>
+<dd><p>Connect Actors to form a processing pipeline.</p>
+<p>Provide a sequence of Actors or sets of Actors to define
+message flow. All topologies are possible: 1-1, 1-n, n-1 and
+n-m.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>*args</strong><span class="classifier">Union[Actor, Iterable[Actor]]</span></dt><dd><p>Actors or sets of Actors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.multiprocessing.Relay.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.multiprocessing.Relay.start" title="Permalink to this definition">#</a></dt>
+<dd><p>Start the relay.</p>
+<p>This spawns all Actor processes and blocks until all these
+processes terminated. If a handler is provided, control is
+given back to the user in the main process.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            </article>
+            
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="ktz-functools.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Functools</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="ktz-string.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">String</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+            </footer>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fas fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     Actor
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.log">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.log()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.loop">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.loop()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.receiver">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.receiver
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.run">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.run()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.send">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.send()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.sender">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.sender
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.shutdown">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.shutdown()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Actor.startup">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Actor.startup()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ktz.multiprocessing.Control">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     Control
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ktz.multiprocessing.Handler">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     Handler
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Handler.run">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Handler.run()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ktz.multiprocessing.Relay">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     Relay
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Relay.connect">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Relay.connect()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.multiprocessing.Relay.start">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Relay.start()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+<div class="toc-item">
+  
+</div>
+
+<div class="toc-item">
+  
+<div class="tocsection sourcelink">
+    <a href="_sources/ktz-multiprocessing.rst.txt">
+        <i class="fas fa-file-alt"></i> Show Source
+    </a>
+</div>
+
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+          </div>
+        </footer>
+        
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=9b1a4fa89bdd0e95b23b"></script>
+
+  <footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2022, Felix Hamann.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.3.<br>
+</p>
+
+  </div>
+  
+</div>
+  </footer>
+  </body>
+</html>

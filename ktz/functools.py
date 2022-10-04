@@ -60,9 +60,8 @@ class Maybe(Generic[T]):
         )
 
 
-class Cascade:
-    """
-    Cascading and cached function execution.
+class Cascade():
+    """Cascading cached function execution.
 
     This class is used to iteratively work with data. If a long
     pipeline requires much data to be processed linearly but some
@@ -71,9 +70,68 @@ class Cascade:
     steps. This is heavily used for iterative development of data
     processing pipelines in ipython notebooks.
 
+    Raises
+    ------
+    KeyError
+        Thrown if a value is requested which has not been cached yet
+
     Examples
     --------
-    FIXME: add docs
+    >>> # FIRST SESSION:
+    >>> !mkdir .cache
+    >>> from ktz.functools import Cascade                                                                                [70/193]
+    >>> # this defines two to be cached values x and y
+    >>> # where y depends on x
+    >>> run = Cascade(path='.cache', x='x.pkl', y='y.pkl')
+    >>> outside = 1
+    >>> @run.cache("x")
+    ... def f():
+    ...     return outside
+    ...
+    >>> @run.cache("y")
+    ... def g(a):
+    ...     return a + 1
+    ...
+    >>> x = f()
+    >>> x
+    1
+    >>> outside += 1
+    >>> outside
+    2
+    >>> # x is cached now!
+    >>> x = f()
+    >>> x
+    1
+    >>> # executing g is now preventing f
+    >>> # to be run in the future
+    >>> y = g(x)
+    >>> y
+    2
+    >>>
+    Do you really want to exit ([y]/n)? y
+    >>> # SECOND SESSION:
+    >>> from ktz.functools import Cascade                                                                                [70/193]
+    >>> # this defines two to be cached values x and y
+    >>> # where y depends on x
+    >>> run = Cascade(path='.cache', x='x.pkl', y='y.pkl')
+    >>> outside = 100
+    >>> @run.cache("x")
+    ... def f():
+    ...     return outside
+    ...
+    >>> @run.cache("y")
+    ... def g(a):
+    ...     return a + 1
+    >>> # f is not executed as g has already
+    >>> # computed and cached a value
+    >>> x = f()
+    >>> x is None
+    True
+    >>> # g is not executed and the cached value
+    >>> # is used instead
+    >>> y = g(x)
+    >>> y
+    2
 
     """
 
@@ -168,7 +226,7 @@ class Cascade:
         """
         Decorate conditionally executed function.
 
-        This decorator handles whether a function is invooked at all.
+        This decorator handles whether a function is invoked at all.
         It does not work with any returned data. Decorated functions
         always return None.
 

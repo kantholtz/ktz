@@ -160,27 +160,46 @@ def flat(
 
 
 class Incrementer(dict):
-    """
-    Automatically assign unique ids.
+    """Automatically assign unique ids.
+
+    This is basically a defaultdict using a state which remembers the
+    latest assigned id and assigns its increment when queried for a
+    missing item. It can be frozen to error out on unknown keys. You
+    can overwrite the built-in incrementer by providing your own iterable
+    upon instantiation using the fn kwarg.
+
+    Parameters
+    ----------
+    dict : dict
+        Base dictionary
+    fn : Iterable
+        Custom iterable to use instead of count()
+
+    Raises
+    ------
+    NameError
+        Thrown if the dict is frozen and an unknown key is accessed
+    KeyError
+        Thrown for invalid explicit setting of values
+    StopIteration
+        Thrown for depleted custom iterators given to __init__
 
     Examples
     --------
     >>> from ktz.collections import Incrementer
-    >>> incr = Incrementer()
-    >>> incr['a']
-    0
-    >>> incr['b']
-    1
-    >>> incr['a']
-    0
-    >>> incr['c']
-    2
-    >>> incr.freeze()
-    >>> incr['d']
-    NameError: Key 'd' not present and incrementer is frozen.
-    >>> incr.unfreeze()
-    >>> incr['d']
-    3
+    >>> # using a custom fn to control the assigned ids
+    >>> from itertools import count
+    >>> ids = Incrementer(fn=count(10))
+    >>> ids[4]
+    10
+    >>> ids[10]
+    11
+    >>> ids
+    {4: 10, 10: 11}
+    >>> ids.freeze()
+    >>> ids[3]
+    NameError: Key '3' not present and incrementer is frozen.
+
     """
 
     def __init__(self, *args, fn: Iterable[A] = None, **kwargs):
@@ -204,10 +223,21 @@ class Incrementer(dict):
         return super().__getitem__(key)
 
     def freeze(self):
-        """
-        Freeze the incrementer.
+        """Freeze the incrementer.
 
         It is no longer possible to automatically create new keys.
+
+        Examples
+        --------
+        >>> from ktz.collections import Incrementer
+        >>> ids = Incrementer()
+        >>> ids[1]
+        0
+        >>> ids.freeze()
+        >>> ids[1]
+        0
+        >>> ids[2]
+        NameError: Key '2' not present and incrementer is frozen.
 
         """
         self._frozen = True
@@ -216,6 +246,17 @@ class Incrementer(dict):
         """Unfreeze the incrementer.
 
         Allows the creation of new keys again
+
+        Examples
+        --------
+        >>> from ktz.collections import Incrementer
+        >>> ids = Incrementer()
+        >>> ids.freeze()
+        >>> ids[2]
+        NameError: Key '2' not present and incrementer is frozen.
+        >>> ids.unfreeze()
+        >>> ids[2]
+        0
 
         """
         self._frozen = False
@@ -240,8 +281,8 @@ def drslv(
     foo.bar.baz -> dic['foo']['bar']['baz']. Setting
     collapse=1 would return dic['foo']['bar'] = {'baz': ...}
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     dic : Mapping
         Data to be looked up
     chain : str

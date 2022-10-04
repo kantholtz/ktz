@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>String &#8212; KTZ Python Tools 0.2.0 documentation</title>
+    <title>Functools &#8212; KTZ Python Tools 0.2.0 documentation</title>
   <script>
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -35,10 +35,11 @@
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'ktz-string';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ktz-functools';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Multiprocessing" href="ktz-multiprocessing.html" />
+    <link rel="next" title="Multiprocessing" href="ktz-multiprocessing.html" />
+    <link rel="prev" title="Filesystem" href="ktz-filesystem.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="docsearch:language" content="en">
   </head>
@@ -128,8 +129,8 @@
                 </li>
                 
 
-                <li class="nav-item">
-                    <a class="nav-link" href="ktz-functools.html">
+                <li class="nav-item current active">
+                    <a class="nav-link" href="#">
                         Functools
                     </a>
                 </li>
@@ -147,8 +148,8 @@
                 </button>
                 <div class="dropdown-menu">
                     
-                <li class="nav-item current active">
-                    <a class="nav-link" href="#">
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-string.html">
                         String
                     </a>
                 </li>
@@ -243,8 +244,8 @@
                 </li>
                 
 
-                <li class="nav-item">
-                    <a class="nav-link" href="ktz-functools.html">
+                <li class="nav-item current active">
+                    <a class="nav-link" href="#">
                         Functools
                     </a>
                 </li>
@@ -262,8 +263,8 @@
                 </button>
                 <div class="dropdown-menu">
                     
-                <li class="nav-item current active">
-                    <a class="nav-link" href="#">
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-string.html">
                         String
                     </a>
                 </li>
@@ -321,106 +322,166 @@
             
             <article class="bd-article" role="main">
               
-  <section id="module-ktz.string">
-<span id="string"></span><h1>String<a class="headerlink" href="#module-ktz.string" title="Permalink to this heading">#</a></h1>
-<p>String operations.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="ktz.string.args_hash">
-<span class="sig-prename descclassname"><span class="pre">ktz.string.</span></span><span class="sig-name descname"><span class="pre">args_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.string.args_hash" title="Permalink to this definition">#</a></dt>
-<dd><p>Produce a hash value for the provided args.</p>
-<p>All provided arguments are transformed by their __str__
-implementation.</p>
+  <section id="module-ktz.functools">
+<span id="functools"></span><h1>Functools<a class="headerlink" href="#module-ktz.functools" title="Permalink to this heading">#</a></h1>
+<p>Nice function-functions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ktz.functools.Cascade">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.functools.</span></span><span class="sig-name descname"><span class="pre">Cascade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.functools.Cascade" title="Permalink to this definition">#</a></dt>
+<dd><p>Cascading cached function execution.</p>
+<p>This class is used to iteratively work with data. If a long
+pipeline requires much data to be processed linearly but some
+steps are very resoure intensive, this cascade is used to
+automatically resume the latest step and omit all previous
+steps. This is heavily used for iterative development of data
+processing pipelines in ipython notebooks.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>*args</strong><span class="classifier">To be hashed arguments</span></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>str</dt><dd><p>Hash value for the arguments</p>
+<dt>KeyError</dt><dd><p>Thrown if a value is requested which has not been cached yet</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.string</span> <span class="kn">import</span> <span class="n">args_hash</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">args_hash</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<span class="go">&#39;a8c83023141d8ed54fcb3d019bdf61a7468f01ac5704d0eb5bf1c626&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; # FIRST SESSION:
+&gt;&gt;&gt; !mkdir .cache
+&gt;&gt;&gt; from ktz.functools import Cascade                                                                                [70/193]
+&gt;&gt;&gt; # this defines two to be cached values x and y
+&gt;&gt;&gt; # where y depends on x
+&gt;&gt;&gt; run = Cascade(path=&#39;.cache&#39;, x=&#39;x.pkl&#39;, y=&#39;y.pkl&#39;)
+&gt;&gt;&gt; outside = 1
+&gt;&gt;&gt; @run.cache(&quot;x&quot;)
+... def f():
+...     return outside
+...
+&gt;&gt;&gt; @run.cache(&quot;y&quot;)
+... def g(a):
+...     return a + 1
+...
+&gt;&gt;&gt; x = f()
+&gt;&gt;&gt; x
+1
+&gt;&gt;&gt; outside += 1
+&gt;&gt;&gt; outside
+2
+&gt;&gt;&gt; # x is cached now!
+&gt;&gt;&gt; x = f()
+&gt;&gt;&gt; x
+1
+&gt;&gt;&gt; # executing g is now preventing f
+&gt;&gt;&gt; # to be run in the future
+&gt;&gt;&gt; y = g(x)
+&gt;&gt;&gt; y
+2
+&gt;&gt;&gt;
+Do you really want to exit ([y]/n)? y
+&gt;&gt;&gt; # SECOND SESSION:
+&gt;&gt;&gt; from ktz.functools import Cascade                                                                                [70/193]
+&gt;&gt;&gt; # this defines two to be cached values x and y
+&gt;&gt;&gt; # where y depends on x
+&gt;&gt;&gt; run = Cascade(path=&#39;.cache&#39;, x=&#39;x.pkl&#39;, y=&#39;y.pkl&#39;)
+&gt;&gt;&gt; outside = 100
+&gt;&gt;&gt; @run.cache(&quot;x&quot;)
+... def f():
+...     return outside
+...
+&gt;&gt;&gt; @run.cache(&quot;y&quot;)
+... def g(a):
+...     return a + 1
+&gt;&gt;&gt; # f is not executed as g has already
+&gt;&gt;&gt; # computed and cached a value
+&gt;&gt;&gt; x = f()
+&gt;&gt;&gt; x is None
+True
+&gt;&gt;&gt; # g is not executed and the cached value
+&gt;&gt;&gt; # is used instead
+&gt;&gt;&gt; y = g(x)
+&gt;&gt;&gt; y
+2
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ktz.string.decode_line">
-<span class="sig-prename descclassname"><span class="pre">ktz.string.</span></span><span class="sig-name descname"><span class="pre">decode_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.string.decode_line" title="Permalink to this definition">#</a></dt>
-<dd><p>Decode a value list bytestring.</p>
-<p>Takes a unicode encoded bytestring separated by the seperator
-token(s) and returns a value tuple. If fns are given, these are
-used to transform the separated values.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.functools.Cascade.cache" title="ktz.functools.Cascade.cache"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cache</span></code></a>(name)</p></td>
+<td><p>Decorate cache functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ktz.functools.Cascade.get" title="ktz.functools.Cascade.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(name)</p></td>
+<td><p>Retrieve a cached object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ktz.functools.Cascade.when" title="ktz.functools.Cascade.when"><code class="xref py py-obj docutils literal notranslate"><span class="pre">when</span></code></a>(*names)</p></td>
+<td><p>Decorate conditionally executed function.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.functools.Cascade.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.functools.Cascade.cache" title="Permalink to this definition">#</a></dt>
+<dd><p>Decorate cache functions.</p>
+<p>This decorator handles whether a function is called or if data
+needs to be retrieved from the cache.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>encoded</strong><span class="classifier">bytes</span></dt><dd><p>The value bytestring</p>
-</dd>
-<dt><strong>sep</strong><span class="classifier">str</span></dt><dd><p>Separator token</p>
-</dd>
-<dt><strong>fn</strong><span class="classifier">Optional[Callable[[A], str]]</span></dt><dd><p>Optional converter applied to all, overrides fns</p>
-</dd>
-<dt><strong>fns</strong><span class="classifier">Iterable[Optional[Callable[[str], A]]]</span></dt><dd><p>Optional converter functions</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>tuple[str | A]</dt><dd><p>The separated values</p>
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>Data key</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<p>from ktz.string import decode_line
-&gt;&gt;&gt; line = “Hellö | 22 | True”.encode(“unicode_escape”)
-&gt;&gt;&gt; decode_line(line, sep=”|”, fns=(str, int, bool))
-(‘Hellö’, 22, True)</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="ktz.string.encode_line">
-<span class="sig-prename descclassname"><span class="pre">ktz.string.</span></span><span class="sig-name descname"><span class="pre">encode_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.string.encode_line" title="Permalink to this definition">#</a></dt>
-<dd><p>Encode a value collection.</p>
-<p>Take a collection of either string values or other (requires fns)
-and produces a bytestring representation with values separated by
-sep. If fns are set, values are mapped accordingly. Adds a newline.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.functools.Cascade.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.functools.Cascade.get" title="Permalink to this definition">#</a></dt>
+<dd><p>Retrieve a cached object.</p>
+<p>Retrieve object of the provided name from the cache.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>data</strong><span class="classifier">Iterable[str | A]</span></dt><dd><p>Collection to be encoded</p>
-</dd>
-<dt><strong>sep</strong><span class="classifier">str</span></dt><dd><p>Separator token</p>
-</dd>
-<dt><strong>fn</strong><span class="classifier">Optional[Callable[[A], str]]</span></dt><dd><p>Optional converter applied to all, overrides fns</p>
-</dd>
-<dt><strong>fns</strong><span class="classifier">Iterable[Optional[Callable[[A], str]]]</span></dt><dd><p>Optional converter functions</p>
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>Data key</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>bytes</dt><dd><p>Encoded bytestring</p>
+<dt>KeyError</dt><dd><p>If no cache file exists yet</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.string</span> <span class="kn">import</span> <span class="n">decode_line</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">line</span> <span class="o">=</span> <span class="n">encode_line</span><span class="p">((</span><span class="s2">&quot;Hellö&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">line</span>
-<span class="go">b&#39;Hell\\xf6|22|True\n&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">decode_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">fns</span><span class="o">=</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
-<span class="go">(&#39;Hellö&#39;, 22, True)</span>
-</pre></div>
-</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ktz.functools.Cascade.when">
+<span class="sig-name descname"><span class="pre">when</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.functools.Cascade.when" title="Permalink to this definition">#</a></dt>
+<dd><p>Decorate conditionally executed function.</p>
+<p>This decorator handles whether a function is invoked at all.
+It does not work with any returned data. Decorated functions
+always return None.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ktz.functools.Maybe">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.functools.</span></span><span class="sig-name descname"><span class="pre">Maybe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loaded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cached</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.functools.Maybe" title="Permalink to this definition">#</a></dt>
+<dd><p>Maybe it contains data, maybe not.</p>
+<p>Used for Cascade, to determine whether to execute functions,
+load data from cache, or ignore supposed data all together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Generic[T]</strong><span class="classifier">T</span></dt><dd><p>Whatever is saved in the cache</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>data</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -433,12 +494,19 @@ sep. If fns are set, values are mapped accordingly. Adds a newline.</p>
             <footer class="bd-footer-article">
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="ktz-multiprocessing.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="ktz-filesystem.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Multiprocessing</p>
+          <p class="prev-next-title">Filesystem</p>
       </div>
+  </a>
+  <a class='right-next' id="next-link" href="ktz-multiprocessing.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Multiprocessing</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
   </a>
 </div>
             </footer>
@@ -457,28 +525,48 @@ sep. If fns are set, values are mapped accordingly. Adds a newline.</p>
 <nav id="bd-toc-nav" class="page-toc">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ktz.string.args_hash">
+  <a class="reference internal nav-link" href="#ktz.functools.Cascade">
    <code class="docutils literal notranslate">
     <span class="pre">
-     args_hash()
+     Cascade
     </span>
    </code>
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.functools.Cascade.cache">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Cascade.cache()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.functools.Cascade.get">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Cascade.get()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ktz.functools.Cascade.when">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Cascade.when()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ktz.string.decode_line">
+  <a class="reference internal nav-link" href="#ktz.functools.Maybe">
    <code class="docutils literal notranslate">
     <span class="pre">
-     decode_line()
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ktz.string.encode_line">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     encode_line()
+     Maybe
     </span>
    </code>
   </a>
@@ -495,7 +583,7 @@ sep. If fns are set, values are mapped accordingly. Adds a newline.</p>
 <div class="toc-item">
   
 <div class="tocsection sourcelink">
-    <a href="_sources/ktz-string.rst.txt">
+    <a href="_sources/ktz-functools.rst.txt">
         <i class="fas fa-file-alt"></i> Show Source
     </a>
 </div>

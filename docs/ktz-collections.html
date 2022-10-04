@@ -4,9 +4,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Collections &#8212; KTZ Python Tools 0.1 documentation</title>
+    <title>Collections &#8212; KTZ Python Tools 0.2.0 documentation</title>
   <script>
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -91,7 +91,7 @@
 
   
   
-    <p class="title logo__title">KTZ Python Tools 0.1 documentation</p>
+    <p class="title logo__title">KTZ Python Tools 0.2.0 documentation</p>
   
 </a>
     
@@ -130,11 +130,33 @@
                 
 
                 <li class="nav-item">
+                    <a class="nav-link" href="ktz-functools.html">
+                        Functools
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-multiprocessing.html">
+                        Multiprocessing
+                    </a>
+                </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
                     <a class="nav-link" href="ktz-string.html">
                         String
                     </a>
                 </li>
                 
+                </div>
+            </div>
+            
     </ul>
 </nav>
       </div>
@@ -223,11 +245,33 @@
                 
 
                 <li class="nav-item">
+                    <a class="nav-link" href="ktz-functools.html">
+                        Functools
+                    </a>
+                </li>
+                
+
+                <li class="nav-item">
+                    <a class="nav-link" href="ktz-multiprocessing.html">
+                        Multiprocessing
+                    </a>
+                </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                <li class="nav-item">
                     <a class="nav-link" href="ktz-string.html">
                         String
                     </a>
                 </li>
                 
+                </div>
+            </div>
+            
     </ul>
 </nav>
       </div>
@@ -285,23 +329,45 @@
 <dt class="sig sig-object py" id="ktz.collections.Incrementer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.collections.</span></span><span class="sig-name descname"><span class="pre">Incrementer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.collections.Incrementer" title="Permalink to this definition">#</a></dt>
 <dd><p>Automatically assign unique ids.</p>
+<p>This is basically a defaultdict using a state which remembers the
+latest assigned id and assigns its increment when queried for a
+missing item. It can be frozen to error out on unknown keys. You
+can overwrite the built-in incrementer by providing your own iterable
+upon instantiation using the fn kwarg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dict</strong><span class="classifier">dict</span></dt><dd><p>Base dictionary</p>
+</dd>
+<dt><strong>fn</strong><span class="classifier">Iterable</span></dt><dd><p>Custom iterable to use instead of count()</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>NameError</dt><dd><p>Thrown if the dict is frozen and an unknown key is accessed</p>
+</dd>
+<dt>KeyError</dt><dd><p>Thrown for invalid explicit setting of values</p>
+</dd>
+<dt>StopIteration</dt><dd><p>Thrown for depleted custom iterators given to __init__</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">Incrementer</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span> <span class="o">=</span> <span class="n">Incrementer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
-<span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
-<span class="go">1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
-<span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
-<span class="go">2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span>
-<span class="go">NameError: Key &#39;d&#39; not present and incrementer is frozen.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="o">.</span><span class="n">unfreeze</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incr</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span>
-<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># using a custom fn to control the assigned ids</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span> <span class="o">=</span> <span class="n">Incrementer</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">count</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="go">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span>
+<span class="go">{4: 10, 10: 11}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">NameError: Key &#39;3&#39; not present and incrementer is frozen.</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -353,6 +419,18 @@
 <span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.collections.Incrementer.freeze" title="Permalink to this definition">#</a></dt>
 <dd><p>Freeze the incrementer.</p>
 <p>It is no longer possible to automatically create new keys.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">Incrementer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span> <span class="o">=</span> <span class="n">Incrementer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">NameError: Key &#39;2&#39; not present and incrementer is frozen.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -360,6 +438,17 @@
 <span class="sig-name descname"><span class="pre">unfreeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.collections.Incrementer.unfreeze" title="Permalink to this definition">#</a></dt>
 <dd><p>Unfreeze the incrementer.</p>
 <p>Allows the creation of new keys again</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">Incrementer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span> <span class="o">=</span> <span class="n">Incrementer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">NameError: Key &#39;2&#39; not present and incrementer is frozen.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="o">.</span><span class="n">unfreeze</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">0</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -461,6 +550,22 @@ former unless they are set to None.</p>
 <p>For example, with sep=”.” and collapse=0
 foo.bar.baz -&gt; dic[‘foo’][‘bar’][‘baz’]. Setting
 collapse=1 would return dic[‘foo’][‘bar’] = {‘baz’: …}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dic</strong><span class="classifier">Mapping</span></dt><dd><p>Data to be looked up</p>
+</dd>
+<dt><strong>chain</strong><span class="classifier">str</span></dt><dd><p>Query string</p>
+</dd>
+<dt><strong>sep</strong><span class="classifier">str</span></dt><dd><p>How the chain needs to be split</p>
+</dd>
+<dt><strong>collapse</strong><span class="classifier">Optional[int]</span></dt><dd><p>Return an n-level deep dict instead</p>
+</dd>
+<dt><strong>default</strong><span class="classifier">Any</span></dt><dd><p>For missing keys; defaults to raising a KeyError</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ktz.collections</span> <span class="kn">import</span> <span class="n">drslv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dic</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span><span class="n">d</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
