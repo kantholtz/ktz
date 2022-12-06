@@ -1,10 +1,9 @@
-import ktz
-from ktz.dataclasses import Index
-from ktz.dataclasses import Builder
+from dataclasses import dataclass
 
 import pytest
 
-from dataclasses import dataclass
+import ktz
+from ktz.dataclasses import Builder, Index
 
 
 @dataclass(frozen=True, order=True)
@@ -127,6 +126,17 @@ class TestIndex:
             Index(A, excludes={"nope"})
         with pytest.raises(KeyError):
             Index(A, includes={"nope"})
+
+    def test_add_single(self, idx):
+        idx = Index(A).add(a[0])
+        assert idx.get(i=1) == {a[0]}
+
+    def test_gets(self, idx):
+        idx = Index(A).add(a[0])
+        assert idx.gets(i=1) == a[0]
+
+    def test_len(self, idx):
+        assert len(idx) == len(a)
 
 
 @dataclass

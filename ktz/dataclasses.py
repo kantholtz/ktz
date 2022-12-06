@@ -8,16 +8,12 @@ This module offers
   Builder: to iteratively build (immutable) data objects
 """
 
-import ktz
-
-from dataclasses import fields
-from dataclasses import asdict
 from collections import defaultdict
-
-from typing import Any
-from typing import Generic
-from typing import TypeVar
 from collections.abc import Iterable
+from dataclasses import asdict, fields
+from typing import Any, Generic, TypeVar, Union
+
+import ktz
 
 # must be a dataclass
 # I omit the somwhat wonky type checking for that
@@ -41,6 +37,9 @@ class Index(Generic[T]):
       Retrieve the intersection result for multi-key queries
 
     """
+
+    def __len__(self) -> int:
+        return len(self.flat)
 
     @property
     def flat(self) -> set[T]:
@@ -106,8 +105,44 @@ class Index(Generic[T]):
         {A(x=2)}
 
         """
-        assert len(kwargs) < 2
+        assert len(kwargs) < 2, "only one query keyword is allowed"
         return self.dis(**kwargs)
+
+    def gets(self, **kwargs) -> T:
+        """
+        Shortcut for single-field, single-value queries.
+
+        If a single field is given, no distinction between dis() and
+        con() exists. So this is a nice shortcut for simple queries
+        where only one value is expected.
+
+        Parameters
+        ----------
+        **kwargs : field-key pair
+
+        Returns
+        -------
+        set[T]
+            Subset of indexed dataclasses
+
+        Examples
+        --------
+        >>> from dataclasses import dataclass
+        >>> from ktz.dataclasses import Index
+        >>> @dataclass(frozen=True)
+        ... class A:
+        ...     x: int
+        ...
+        >>> idx = Index(A).add([A(x=1), A(x=2)])
+        >>> idx.get(x=2)
+        {A(x=2)}
+
+        """
+        assert len(kwargs) < 2, "only one query keyword is allowed"
+        res = self.dis(**kwargs)
+
+        assert len(res) == 1, "accessed single value with multiple results"
+        return res.pop()
 
     def dis(self, **kwargs) -> set[T]:
         """
@@ -218,13 +253,13 @@ class Index(Generic[T]):
 
         return set(self._idxs[field])
 
-    def add(self, ts: Iterable[T]) -> "Index":
+    def add(self, ts: Union[T, Iterable[T]]) -> "Index":
         """
         Add instances to index.
 
         Parameters
         ----------
-        ts : Iterable[T]
+        ts : T | Iterable[T]
             The dataclass instances to be indexed
 
         Returns
@@ -233,7 +268,12 @@ class Index(Generic[T]):
             self
 
         """
-        for t, dic in ((t, asdict(t)) for t in ts):
+        try:
+            gen = iter(ts)
+        except TypeError:
+            gen = iter([ts])
+
+        for t, dic in ((t, asdict(t)) for t in gen):
             self._flat.add(t)
             for key in self._idxs:
                 self._idxs[key][dic[key]].add(t)
