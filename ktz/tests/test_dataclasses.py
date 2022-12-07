@@ -60,6 +60,9 @@ class TestIndex:
     def test_flat(self, idx):
         assert sorted(a) == sorted(idx.flat)
 
+    def test_iter(self, idx):
+        assert sorted(a) == sorted(idx)
+
     def test_get_single(self, idx):
         self._test_single(idx.get)
 

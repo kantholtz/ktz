@@ -9,7 +9,7 @@ This module offers
 """
 
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from dataclasses import asdict, fields
 from typing import Any, Generic, TypeVar, Union
 
@@ -40,6 +40,9 @@ class Index(Generic[T]):
 
     def __len__(self) -> int:
         return len(self.flat)
+
+    def __iter__(self) -> Iterator[T]:
+        return iter(self.flat)
 
     @property
     def flat(self) -> set[T]:
