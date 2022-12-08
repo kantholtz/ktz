@@ -6,8 +6,8 @@ from contextlib import ExitStack
 import pytest
 import yaml
 
-from ktz.collections import (Incrementer, buckets, dflat, dmerge, drslv, flat,
-                             ryaml, unbucket)
+from ktz.collections import (Incrementer, buckets, dconv, dflat, dmerge, drslv,
+                             flat, ryaml, unbucket)
 
 
 class TestBuckets:
@@ -326,6 +326,52 @@ class TestDRslv:
         with pytest.deprecated_call():
             res = drslv(d, "1.1.1", skiplast=1)
             assert res == {"1": "1.1.1", "2": "1.1.2"}
+
+
+class TestDConv:
+    def test_empty_dic(self):
+        d1 = {}
+        d2 = dconv(d1)
+
+        assert d1 == d2
+        assert d1 is not d2
+
+    def test_single_fn(self):
+        d1 = dict(a=2)
+        d2 = dconv(d1, lambda t: str(t))
+        assert d2 == dict(a="2")
+
+    def test_multiple_fn(self):
+        def stoi(v):
+            if isinstance(v, str):
+                return int(v)
+            return v
+
+        def plus1(v):
+            if isinstance(v, int):
+                return v + 1
+            return v
+
+        d1 = dict(a=1, b="2", c=[])
+        d2 = dconv(d1, stoi, plus1)
+
+        assert d2 == dict(a=2, b=3, c=[])
+
+    def test_key(self):
+        def fn(v, k):
+            if k == "foo":
+                return True
+            return False
+
+        d1 = dict(foo=1, bar=2)
+        d2 = dconv(d1, fn)
+
+        assert d2 == dict(foo=True, bar=False)
+
+    def test_deep(self):
+        d1 = dict(foo=1, bar=dict(a=2, b=3))
+        d2 = dconv(d1, lambda v: v + 2)
+        assert d2 == dict(foo=3, bar=dict(a=4, b=5))
 
 
 class TestRyaml:

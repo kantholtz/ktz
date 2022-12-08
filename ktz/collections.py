@@ -8,6 +8,7 @@ import warnings
 from collections import defaultdict
 from collections.abc import Collection, Generator, Iterable, Mapping
 from functools import partial
+from inspect import signature
 from itertools import count
 from pathlib import Path
 from typing import Any, Callable, Optional, Union
@@ -420,7 +421,11 @@ def dmerge(*ds: Mapping):
 
     Examples
     --------
-    FIXME: Add docs.
+    >>> from ktz.collections import dmerge
+    >>> d1 = dict(foo=dict(a=1, b=2), bar=3)
+    >>> d2 = dict(foo=dict(a=3, c=4), xyz=5)
+    >>> dmerge(d1, d2)
+    {'foo': {'a': 3, 'b': 2, 'c': 4}, 'bar': 3, 'xyz': 5}
 
     """
     if len(ds) == 0:
@@ -445,6 +450,55 @@ def dmerge(*ds: Mapping):
 
         last = curr
     return curr
+
+
+def _dconv(dic: dict, fns):
+    res = {}
+    for k, v in dic.items():
+        if isinstance(v, Mapping):
+            res[k] = _dconv(v, fns)
+            continue
+
+        res[k] = v
+        for fn, argc in fns:
+            assert argc in {1, 2}, "converter functions accept 1 or 2 arguments"
+            res[k] = fn(res[k]) if argc == 1 else fn(res[k], k)
+
+    return res
+
+
+def dconv(dic: dict, *convert: Callable[[A, B], C]):
+    """Convert a dictionary deeply.
+
+    A pipeline of converter functions may be provided which transform
+    the values of the given mapping. It always returns a deep copy of
+    the mapping as a dictionary. The converter functions are applied
+    in the given order.
+
+    Parameters
+    ----------
+    dic : dict
+        Mapping to be copied and transformed
+    *convert : Callable[[A, B], C]
+        Converter functions
+
+    Examples
+    --------
+    >>> from ktz.collections import dconv
+    >>> dconv(dict(a=1, d=dict(b=2, c=3)), lambda v: v + 2)
+    {'a': 3, 'd': {'b': 4, 'c': 5}}
+    >>> dconv(dict(a=1, d=dict(b=2, c=3)), lambda v, k: True if k == 'b' else False)
+    {'a': False, 'd': {'b': True, 'c': False}}
+
+    """
+
+    # Obtain function signatures for converter functions to determine
+    # whether additionally the key needs to be given to the converter.
+    # As with nearly all cases, "don't ask for permission but for
+    # forgiveness" is a bad anti-pattern because we never know whether
+    # we accidentally catch a TypeError produced by the invoker.
+    fns = [(fn, len(signature(fn).parameters)) for fn in convert]
+    return _dconv(dic, fns)
 
 
 def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
