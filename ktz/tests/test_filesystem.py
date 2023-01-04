@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import ktz
-from ktz import filesystem as fs
-
-import pytest
 import tempfile
 from pathlib import Path
+
+import pytest
+
+import ktz
+from ktz import filesystem as fs
 
 
 class TestPath:
@@ -126,7 +127,8 @@ class TestPathRotate:
 
 class TestGitHash:
     def test_githash(self):
-        # don't know how to verify return value
-        # for now should suffice that it is callable
-        # errors would concern upstream lib anyway
-        fs.git_hash()
+        with pytest.deprecated_call():
+            # don't know how to verify return value
+            # for now should suffice that it is callable
+            # errors would concern upstream lib anyway
+            fs.git_hash()

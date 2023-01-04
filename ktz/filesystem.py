@@ -2,17 +2,12 @@
 
 """Things to do with the filesystem."""
 
-import ktz
-
-import pathlib
 import logging
+import pathlib
+import warnings
+from typing import Optional, Union
 
-import git
-
-
-from typing import Union
-from typing import Optional
-
+import ktz
 
 log = logging.getLogger(__name__)
 
@@ -177,6 +172,10 @@ def git_hash() -> str:
     'bedee821a4c1e1217cee783b33ad3bea98dbbb9d'
 
     """
+    warnings.warn("to be removed in 0.4", DeprecationWarning)
+
+    import git
+
     repo = git.Repo(search_parent_directories=True)
     # dirty = '-dirty' if repo.is_dirty else ''
     return str(repo.head.object.hexsha)
