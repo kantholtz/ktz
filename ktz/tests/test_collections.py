@@ -7,7 +7,7 @@ import pytest
 import yaml
 
 from ktz.collections import (Incrementer, buckets, dconv, dflat, dmerge, drslv,
-                             flat, ryaml, unbucket)
+                             lflat, ryaml, unbucket)
 
 
 class TestBuckets:
@@ -70,25 +70,30 @@ class TestUnbucket:
         assert ret == ref
 
 
-class TestFlat:
-    def test_flat(self):
+class TestLFlat:
+    def test_lflat(self):
         ref = 1, 2
-        ret = flat([[[1]], [2]])
+        ret = lflat([[[1]], [2]])
         assert tuple(ret) == ref
 
-    def test_flat_idempotent(self):
-        ref = 1, 2
-        ret = flat(flat([[1], [2]]))
-        assert tuple(ret) == ref
-
-    def test_flat_depth_1(self):
+    def test_lflat_depth_1(self):
         ref = [1], 2
-        ret = flat([[1], 2], depth=1)
+        ret = lflat([[1], 2], depth=1)
         assert tuple(ret) == ref
 
-    def test_flat_depth_2(self):
+    def test_lflat_depth_2(self):
         ref = 1, [2]
-        ret = flat([[1], [[2]]], depth=2)
+        ret = lflat([[1], [[2]]], depth=2)
+        assert tuple(ret) == ref
+
+    def test_lflat_str(self):
+        ref = "foo", "bar"
+        ret = lflat([[["foo"]], ["bar"]])
+        assert tuple(ret) == ref
+
+    def test_lflat_tuple(self):
+        ref = "foo", "bar"
+        ret = lflat(((("foo")), ("bar")))
         assert tuple(ret) == ref
 
 
@@ -265,7 +270,7 @@ class TestDFlat:
     #     assert res == d
 
 
-class TestDRslv:
+class TestDrslv:
     def test_empty_dic(self):
         d = {}
 

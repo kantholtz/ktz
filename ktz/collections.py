@@ -116,22 +116,23 @@ def unbucket(
     return [(key, el) for key, lis in buckets.items() for el in lis]
 
 
-Nested = Union[Iterable[A], A]
+# cannot get Union[list, tuple] to be a Generic
+Nested = Union[list[A], A]
 
 
-def flat(
-    col: Iterable[Nested],
+def lflat(
+    col: Nested,
     depth: int = -1,
 ) -> Generator[A, None, None]:
-    """Flattens a collection.
+    """Flattens a tuple or list.
 
-    Consumes the given iterable and flattens it up to
+    Consumes the given sequence and flattens it up to
     n levels deep or completely.
 
     Parameters
     ----------
-    col : Iterable[Nested]
-        Nested collection
+    col : Nested
+        Nested list or tuple
     depth : int
         Maximum depth to flatten
 
@@ -147,15 +148,18 @@ def flat(
     <generator object flat at 0x7f2886aeccf0>
     >>> list(flat([[1], [[2]]], depth=2))
     [1, [2]]
+    >>> list(flat([["foo"], [["bar"]]]))
+    ["foo", "bar"]
 
     """
-    if depth == 0:
+    isseq = isinstance(col, list) or isinstance(col, tuple)
+    if depth == 0 or not isseq:
         yield col
         return
 
     try:
         for elem in col:
-            yield from flat(col=elem, depth=depth - 1)
+            yield from lflat(col=elem, depth=depth - 1)
     except TypeError:
         yield col
 
