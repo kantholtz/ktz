@@ -322,7 +322,8 @@ def drslv(
     >>> drslv(dic, 'not.there', default=None)
     >>> drslv(dic, 'not.there', default=1)
     1
-
+    >>> drslv(dic, 'foo.*.a')  # only works for single-element dicts
+    1
     """
     if skiplast:
         warnings.warn(
@@ -338,11 +339,17 @@ def drslv(
         trail = []
         for key in crumbs:
             trail.append(dic)
+
+            if key == "*":
+                if len(dic) > 1:
+                    raise KeyError(f"Multiple candidates for wildcard: {list(dic)}")
+                key = list(dic)[0]
+
             dic = dic[key]
 
     except KeyError as err:
         if default == KeyError:
-            raise err
+            raise KeyError(f"drsvl: {err} not found for {chain=}")
 
         return default
 

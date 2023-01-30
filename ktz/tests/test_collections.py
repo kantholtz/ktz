@@ -322,7 +322,7 @@ class TestDrslv:
         assert res == {"1": {"1": "1.1.1", "2": "1.1.2"}, "2": {"1": "1.2.1"}}
 
         with pytest.raises(KeyError):
-            res = drslv(d, "1.1.3", collapse=2)
+            drslv(d, "1.1.3", collapse=2)
 
     def test_deprecated_skiplast(self):
         d = {"1": {"1": {"1": "1.1.1", "2": "1.1.2"}}}
@@ -331,6 +331,15 @@ class TestDrslv:
         with pytest.deprecated_call():
             res = drslv(d, "1.1.1", skiplast=1)
             assert res == {"1": "1.1.1", "2": "1.1.2"}
+
+    def test_wildcard(self):
+        d = dict(a=dict(foo=dict(b=3)))
+        assert drslv(d, "a.*.b") == 3
+
+    def test_wildcard_error(self):
+        d = dict(a=dict(x=1), b=dict(y=1))
+        with pytest.raises(KeyError):
+            drslv(d, "*.x")
 
 
 class TestDConv:
