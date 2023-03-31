@@ -79,6 +79,28 @@ class Index(Generic[T]):
 
         return agg
 
+    def has(self, **kwargs) -> bool:
+        """
+        Test whether a value is indexed for one or more instances.
+
+        This is basically a shortcut for single-key checks. If more
+        kwargs are provided, use a len check on con or dis instead.
+
+        Exmples
+        -------
+        >>> from dataclasses import dataclass
+        >>> from ktz.dataclasses import Index
+        >>> @dataclass(frozen=True)
+        ... class A:
+        ...     x: int
+        ...
+        >>> idx = Index(A).add([A(x=1), A(x=2)])
+        >>> idx.has(x=2)
+        True
+        """
+        assert len(kwargs) == 1, "use con or dis for multiple values"
+        return bool(len(self.con(**kwargs)))
+
     def get(self, **kwargs) -> set[T]:
         """
         Shortcut for single-field queries.
@@ -332,7 +354,6 @@ class Index(Generic[T]):
 
         self._idxs = defaultdict(dict)
         for name in fieldnames:
-
             if includes and name not in includes:
                 continue
 
@@ -431,7 +452,6 @@ class Builder:
 
         """
         for key, val in kwargs.items():
-
             if self._immutable and key in self._kwargs:
                 raise ktz.Error(f"cannot overwrite {key}")
 

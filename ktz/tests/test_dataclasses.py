@@ -8,7 +8,6 @@ from ktz.dataclasses import Builder, Index
 
 @dataclass(frozen=True, order=True)
 class A:
-
     i: int
     f: float
     s: str
@@ -140,6 +139,21 @@ class TestIndex:
 
     def test_len(self, idx):
         assert len(idx) == len(a)
+
+    def test_has(self, idx):
+        assert idx.has(i=1)
+        assert idx.has(f=2.3)
+        assert idx.has(s="hello")
+
+        assert not idx.has(i=5)
+        assert not idx.has(f=2.2)
+        assert not idx.has(s="nope")
+
+        with pytest.raises(KeyError):
+            idx.has(foo="bar")
+
+        with pytest.raises(AssertionError):
+            idx.has(i=1, f=2.3)
 
 
 @dataclass
