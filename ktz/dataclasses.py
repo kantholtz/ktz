@@ -44,6 +44,12 @@ class Index(Generic[T]):
     def __iter__(self) -> Iterator[T]:
         return iter(self.flat)
 
+    def __delitem__(self, obj) -> None:
+        self._flat.remove(obj)
+        dic = asdict(obj)
+        for key, idx in self._idxs.items():
+            idx[dic[key]].remove(obj)
+
     @property
     def flat(self) -> set[T]:
         """Return all indexed dataclasses.

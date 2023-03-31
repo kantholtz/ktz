@@ -155,6 +155,15 @@ class TestIndex:
         with pytest.raises(AssertionError):
             idx.has(i=1, f=2.3)
 
+    def test_delitem(self, idx):
+        del idx[a[3]]
+
+        assert a[3] not in idx.flat
+
+        assert idx.get(i=a[3].i) == set()
+        assert idx.get(f=a[3].f) == set()
+        assert idx.get(s=a[3].s) == set()
+
 
 @dataclass
 class Product:
