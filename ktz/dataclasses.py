@@ -10,7 +10,7 @@ This module offers
 
 from collections import defaultdict
 from collections.abc import Iterable, Iterator
-from dataclasses import asdict, fields
+from dataclasses import fields
 from typing import Any, Generic, TypeVar, Union
 
 import ktz
@@ -46,9 +46,8 @@ class Index(Generic[T]):
 
     def __delitem__(self, obj) -> None:
         self._flat.remove(obj)
-        dic = asdict(obj)
         for key, idx in self._idxs.items():
-            idx[dic[key]].remove(obj)
+            idx[getattr(obj, key)].remove(obj)
 
     @property
     def flat(self) -> set[T]:
@@ -304,10 +303,10 @@ class Index(Generic[T]):
         except TypeError:
             gen = iter([ts])
 
-        for t, dic in ((t, asdict(t)) for t in gen):
+        for t in gen:
             self._flat.add(t)
             for key in self._idxs:
-                self._idxs[key][dic[key]].add(t)
+                self._idxs[key][getattr(t, key)].add(t)
 
         return self
 
