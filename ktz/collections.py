@@ -338,6 +338,9 @@ def drslv(
     try:
         trail = []
         for key in crumbs:
+            if not isinstance(dic, dict):
+                raise KeyError
+
             trail.append(dic)
 
             if key == "*":

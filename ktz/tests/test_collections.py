@@ -290,6 +290,12 @@ class TestDrslv:
         res = drslv(d, "foo.bar")
         assert res == "deep"
 
+    def test_too_deep(self):
+        d = dict(foo=dict(bar="deep"), flat="flat")
+
+        with pytest.raises(KeyError):
+            drslv(d, "foo.bar.baz")
+
     def test_sep(self):
         d = dict(foo=dict(bar="deep"), flat="flat")
 
