@@ -234,6 +234,11 @@ class TestDFlat:
         res = dflat(d, sep=" ")
         assert res == {"1 1": "1.1"}
 
+    def test_dict_leaves(self):
+        d = {"1": {}, "2": {"1": {}, "2": {}}}
+        res = dflat(d)
+        assert res == {"1": {}, "2.1": {}, "2.2": {}}
+
     # TODO release 0.3
     # def test_skiplast(self):
     #     d = {

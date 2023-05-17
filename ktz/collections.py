@@ -381,8 +381,6 @@ def dflat(
         Separator to concatenate the keys with
     only : Optional[int]
         Stops flattening after the provided depth
-    skiplast : Optional[int]
-        Do not flatten up to n hops from each leaf
 
     Examples
     --------
@@ -398,10 +396,10 @@ def dflat(
     """
 
     def descend(v, depth):
-        if not isinstance(v, Mapping):
+        if not isinstance(v, Mapping) or len(v) == 0:
             return False
 
-        if only is None or depth < only:
+        if (only is None) or (depth < only):
             return True
 
         return False
