@@ -164,6 +164,21 @@ class TestIndex:
         assert idx.get(f=a[3].f) == set()
         assert idx.get(s=a[3].s) == set()
 
+    def test_freeze(self, idx):
+        x, y = a[:2], a[2:]
+
+        idx = Index(A).add(x)
+        idx.freeze()
+
+        with pytest.raises(ktz.Error):
+            idx.add(y)
+
+        idx.unfreeze()
+        idx.add(y)
+
+        assert idx.dis(i=1) == {a[0], a[1]}
+        assert idx.gets(i=3) == a[3]
+
 
 @dataclass
 class Product:

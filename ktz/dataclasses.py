@@ -49,6 +49,24 @@ class Index(Generic[T]):
         for key, idx in self._idxs.items():
             idx[getattr(obj, key)].remove(obj)
 
+    def freeze(self):
+        """
+        Do not allow changes to the Index.
+
+        This removes the ability to mutate the Index state
+        by freezing the underlying data management.
+        """
+        self._flat = frozenset(self._flat)
+
+    def unfreeze(self):
+        """
+        Allow changes to the Index (the default).
+
+        This adds the ability to mutate the Index state
+        to allow adding and deleting objects.
+        """
+        self._flat = set(self._flat)
+
     @property
     def flat(self) -> set[T]:
         """Return all indexed dataclasses.
@@ -298,6 +316,12 @@ class Index(Generic[T]):
             self
 
         """
+        # we could also catch the AttributeError
+        # raised for frozenset.add but explicit is
+        # better than implicit
+        if type(self._flat) is frozenset:
+            raise ktz.Error("Cannot mutate a frozen Index")
+
         try:
             gen = iter(ts)
         except TypeError:
