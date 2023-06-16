@@ -1,7 +1,6 @@
 # KTZ - Python Tools
 
 [![Documentation](https://img.shields.io/badge/Documentation-Latest-success?style=for-the-badge)](https://kantholtz.github.io/ktz/)
-[![Master Checks](https://img.shields.io/github/workflow/status/kantholtz/ktz/Current%20Master%20Checks?style=for-the-badge&label=Master%20Checks)](https://github.com/kantholtz/ktz/actions/workflows/development.yml)
 [![KTZ on PyPI](https://img.shields.io/pypi/v/ktz?style=for-the-badge)](https://pypi.org/project/ktz)
 [![Code Style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 
