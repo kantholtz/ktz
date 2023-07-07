@@ -354,7 +354,7 @@ def drslv(
 
     except KeyError as err:
         if default == KeyError:
-            raise KeyError(f"drsvl: {err} not found for {chain=}")
+            raise KeyError(f"drsvl: {err} not found for {chain}")
 
         return default
 
