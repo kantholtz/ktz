@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from ktz import functools as ft
+import tempfile
+from pathlib import Path
 
 import pytest
 
-import tempfile
-from pathlib import Path
+from ktz import functools as ft
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ class TestCascade:
     def test_single_function(self, cachedir):
         cachefile = "x"
 
-        run = ft.Cascade(path=cachedir, x=cachefile)
+        run = ft.Cascade(prefix=cachedir, x=cachefile)
 
         # to check whether the function is not called
         # again we use a tracking variable from the
@@ -41,7 +41,7 @@ class TestCascade:
         assert x == 1
 
         # a new run must use the cachefile now
-        run = ft.Cascade(path=cachedir, x=cachefile)
+        run = ft.Cascade(prefix=cachedir, x=cachefile)
 
         @run.cache("x")
         def foo():
@@ -64,7 +64,7 @@ class TestCascade:
             cachefile3 = "z"
 
             run = ft.Cascade(
-                path=cachedir,
+                prefix=cachedir,
                 x=cachefile1,
                 y=cachefile2,
                 z=cachefile3,
@@ -136,7 +136,7 @@ class TestCascade:
             cachefile3 = "z"
 
             run = ft.Cascade(
-                path=cachedir,
+                prefix=cachedir,
                 x=cachefile1,
                 y=cachefile2,
                 z=cachefile3,
@@ -182,7 +182,7 @@ class TestCascade:
 
     def test_get(self, cachedir):
         outside = 1
-        run = ft.Cascade(path=cachedir, x="x")
+        run = ft.Cascade(prefix=cachedir, x="x")
 
         @run.cache("x")
         def f():
@@ -193,7 +193,7 @@ class TestCascade:
         assert run.get("x") == 1
 
         outside = 2
-        run = ft.Cascade(path=cachedir, x="x")
+        run = ft.Cascade(prefix=cachedir, x="x")
 
         @run.cache("x")
         def f(x):
@@ -205,7 +205,7 @@ class TestCascade:
         assert run.get("x") == 1
 
     def test_get_raises(self, cachedir):
-        run = ft.Cascade(path=cachedir, x="x")
+        run = ft.Cascade(prefix=cachedir, x="x")
 
         with pytest.raises(KeyError):
             run.get("x")
@@ -214,7 +214,7 @@ class TestCascade:
         outside = 1
 
         def _create_run():
-            run = ft.Cascade(path=cachedir, x="x", y="y")
+            run = ft.Cascade(prefix=cachedir, x="x", y="y")
 
             @run.cache("x")
             def f():

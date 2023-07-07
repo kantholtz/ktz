@@ -9,7 +9,7 @@ from functools import wraps
 from pathlib import Path
 from typing import Generic, TypeVar, Union
 
-from ktz.filesystem import path as path
+from ktz.filesystem import path
 
 T = TypeVar("T")
 log = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ class Cascade:
     >>> from ktz.functools import Cascade                                                                                [70/193]
     >>> # this defines two to be cached values x and y
     >>> # where y depends on x
-    >>> run = Cascade(path='.cache', x='x.pkl', y='y.pkl')
+    >>> run = Cascade(prefix='.cache', x='x.pkl', y='y.pkl')
     >>> outside = 1
     >>> @run.cache("x")
     ... def f():
@@ -107,7 +107,7 @@ class Cascade:
     >>> from ktz.functools import Cascade                                                                                [70/193]
     >>> # this defines two to be cached values x and y
     >>> # where y depends on x
-    >>> run = Cascade(path='.cache', x='x.pkl', y='y.pkl')
+    >>> run = Cascade(prefix='.cache', x='x.pkl', y='y.pkl')
     >>> outside = 100
     >>> @run.cache("x")
     ... def f():
@@ -245,7 +245,7 @@ class Cascade:
 
     def __init__(
         self,
-        path: Union[str, Path] = None,
+        prefix: Union[str, Path] = None,
         **kwargs: Union[str, Path],
     ):
         """
@@ -253,13 +253,13 @@ class Cascade:
 
         Parameters
         ----------
-        path : Union[str, Path]
+        prefix : Union[str, Path]
             Optional basepath to be prepended to all cache files
         **kwargs : Union[str, Path]
             Register data keys
 
         """
-        self.path = path(path) if path else path(".")
+        self.path = path(prefix) if path else path(".")
         self.data = {}
 
         found = False
