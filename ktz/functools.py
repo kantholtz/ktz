@@ -2,20 +2,14 @@
 
 """Nice function-functions."""
 
-import pickle
 import logging
-from pathlib import Path
+import pickle
+from dataclasses import dataclass, field, replace
 from functools import wraps
-from dataclasses import field
-from dataclasses import replace
-from dataclasses import dataclass
+from pathlib import Path
+from typing import Generic, TypeVar, Union
 
-from ktz.filesystem import path as kpath
-
-from typing import Union
-from typing import TypeVar
-from typing import Generic
-
+from ktz.filesystem import path as path
 
 T = TypeVar("T")
 log = logging.getLogger(__name__)
@@ -60,7 +54,7 @@ class Maybe(Generic[T]):
         )
 
 
-class Cascade():
+class Cascade:
     """Cascading cached function execution.
 
     This class is used to iteratively work with data. If a long
@@ -265,7 +259,7 @@ class Cascade():
             Register data keys
 
         """
-        self.path = kpath(path) if path else kpath(".")
+        self.path = path(path) if path else path(".")
         self.data = {}
 
         found = False

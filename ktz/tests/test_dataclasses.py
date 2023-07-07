@@ -164,6 +164,9 @@ class TestIndex:
         assert idx.get(f=a[3].f) == set()
         assert idx.get(s=a[3].s) == set()
 
+        with pytest.raises(KeyError):
+            del idx[a[3]]
+
     def test_freeze(self, idx):
         x, y = a[:2], a[2:]
 

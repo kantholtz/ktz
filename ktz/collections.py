@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 """Tools for working with collection types."""
-
 
 import copy
 import logging
@@ -15,7 +13,7 @@ from typing import Any, Callable, Optional, Union
 
 import yaml
 
-from ktz.filesystem import path as kpath
+from ktz.filesystem import path as path
 
 log = logging.getLogger(__name__)
 
@@ -286,6 +284,10 @@ def drslv(
     foo.bar.baz -> dic['foo']['bar']['baz']. Setting
     collapse=1 would return dic['foo']['bar'] = {'baz': ...}
 
+    It is also possible to use wildcards in the querz string
+    to skip unknown but unambiguous (i.e. single-key dict)
+    entries.
+
     Parameters
     ----------
     dic : Mapping
@@ -363,7 +365,6 @@ def dflat(
     dic,
     sep: str = ".",
     only: Optional[int] = None,
-    # skiplast: Optional[int] = None,
 ):
     """
     Flatten a deep dictionary with string keys.
@@ -415,7 +416,7 @@ def dflat(
         return tar
 
     # step 1: flatten completely
-    return rec(dic, {}, [])
+    return rec(dic, tar={}, trail=[])
 
 
 def dmerge(*ds: Mapping):
@@ -480,7 +481,8 @@ def _dconv(dic: dict, fns):
 
 
 def dconv(dic: dict, *convert: Callable[[A, B], C]):
-    """Convert a dictionary deeply.
+    """
+    Convert a dictionary deeply.
 
     A pipeline of converter functions may be provided which transform
     the values of the given mapping. It always returns a deep copy of
@@ -521,14 +523,21 @@ def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
     and joined together. Afterwards, all provided kwargs
     overwrite the joined configuration dict.
 
+    Parameters
+    ----------
+    *configs : Union[Path, str]
+        Config files to be read and merged
+    **overwrites : Any
+        To overwrite loaded values
+
     """
-    as_path = partial(kpath, is_file=True)
+    as_path = partial(path, is_file=True)
 
     # first join all yaml configs into one dictionary;
     # later dictionaries overwrite earlier ones
     loaded = []
-    for path in map(as_path, configs):
-        with path.open(mode="r") as fd:
+    for filepath in map(as_path, configs):
+        with filepath.open(mode="r") as fd:
             loaded.append(yaml.safe_load(fd) or {})
 
     work = loaded + [overwrites]

@@ -99,8 +99,6 @@ Module Overview
      Shorthand utility to create pathlib.Paths
    * :func:`ktz.filesystem.path_rotate`
      Keep n previous versions of a file or directory
-   * :func:`ktz.filesystem.git_hash`
-     Obtain the current git hash
 
 .. topic:: Functools
 
@@ -109,12 +107,12 @@ Module Overview
 
 .. topic:: Multiprocessing
 
+   * :class:`ktz.multiprocessing.Relay`
+     Wire Actors together and control the life-cycle
    * :class:`ktz.multiprocessing.Actor`
      Process abstraction to be used with a Relay
    * :class:`ktz.multiprocessing.Handler`
      Execute code in the Relay's main process
-   * :class:`ktz.multiprocessing.Relay`
-     Wire Actors together and control the life-cycle
 
 .. topic:: String
 

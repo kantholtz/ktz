@@ -39,33 +39,93 @@ class Index(Generic[T]):
     """
 
     def __len__(self) -> int:
+        """
+        Number of indexed dataclasses.
+
+        Returns
+        -------
+        int
+            Indexed dataclasses
+
+        Examples
+        --------
+        >>> idx = Index(A).add([A(x=0), A(x=1)])
+        >>> len(idx)
+        2
+        """
         return len(self.flat)
 
     def __iter__(self) -> Iterator[T]:
         return iter(self.flat)
 
     def __delitem__(self, obj) -> None:
+        """
+        Delete a record from the index.
+
+        Parameters
+        ----------
+        obj : T
+            The object to be removed
+
+        Examples
+        --------
+        >>> from ktz.dataclasses import Index
+        >>> @dataclass(frozen=True)
+        ... class A:
+        ...     x: int
+        ...
+        >>> a0, a1 = A(x=0), A(x=1)
+        ... idx = Index(A).add([a0, a1])
+        >>> del idx[a0]
+        >>> del idx[A(x=1)]  # hash based
+        >>> len(idx)
+        0
+        """
         self._flat.remove(obj)
         for key, idx in self._idxs.items():
             idx[getattr(obj, key)].remove(obj)
 
-    def freeze(self):
+    def freeze(self) -> "Index":
         """
         Do not allow changes to the Index.
 
         This removes the ability to mutate the Index state
         by freezing the underlying data management.
+
+        Examples
+        --------
+        >>> from ktz.dataclasses import Index
+        >>> from dataclasses import dataclass
+        >>> @dataclass(frozen=True)
+        ... class A:
+        ...     x: int
+        ...
+        >>> idx = Index(A)
+        >>> idx.freeze()
+        >>> idx.add(A(x=0))
+        Traceback (most recent call last):
+          Input In [11] in <cell line: 1>
+            idx.add(A(x=0))
+          File ~/Complex/scm/ktz/ktz/dataclasses.py:325 in add
+            raise ktz.Error("Cannot mutate a frozen Index")
+        Error: Cannot mutate a frozen Index
+
+        >>> idx.unfreeze()
+        >>> idx.add(A(x=0))
         """
         self._flat = frozenset(self._flat)
+        return self
 
-    def unfreeze(self):
+    def unfreeze(self) -> "Index":
         """
         Allow changes to the Index (the default).
 
         This adds the ability to mutate the Index state
-        to allow adding and deleting objects.
+        to allow adding and deleting objects. See Index.freeze
+        for an usage example.
         """
         self._flat = set(self._flat)
+        return self
 
     @property
     def flat(self) -> set[T]:
@@ -308,7 +368,9 @@ class Index(Generic[T]):
         Parameters
         ----------
         ts : T | Iterable[T]
-            The dataclass instances to be indexed
+            The dataclass instances to be indexed. You may
+            provide both single instances or iterables over
+            such instances.
 
         Returns
         -------
