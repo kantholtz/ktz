@@ -4,12 +4,12 @@ import copy
 import logging
 import warnings
 from collections import defaultdict
-from collections.abc import Collection, Generator, Iterable, Mapping
+from collections.abc import Collection, Generator, Iterable, Mapping, MutableMapping
 from functools import partial
 from inspect import signature
 from itertools import count
 from pathlib import Path
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, TypeAlias, Union
 
 import yaml
 
@@ -22,7 +22,12 @@ log = logging.getLogger(__name__)
 #   COLLECTIONS
 #
 
-A, B, C, D = Any, Any, Any, Any
+A: TypeAlias = Any
+B: TypeAlias = Any
+C: TypeAlias = Any
+D: TypeAlias = Any
+
+
 Index = int
 
 
@@ -35,7 +40,7 @@ Index = int
 def buckets(
     col: Union[Collection[A], Collection[tuple[B, C]]],
     key: Optional[Callable[[Index, A], tuple[B, C]]] = None,
-    mapper: Optional[Callable[[tuple[C]], D]] = None,
+    mapper: Optional[Callable[[tuple[C, ...]], D]] = None,
 ) -> Union[dict[B, list[C]], dict[B, D]]:
     """
     Sort data into buckets.
@@ -75,7 +80,7 @@ def buckets(
         dic[k].append(v)
 
     if mapper:
-        dic = {k: mapper(v) for k, v in dic.items()}
+        dic = {k: mapper(tuple(v)) for k, v in dic.items()}
 
     return dict(dic)
 
@@ -205,14 +210,14 @@ class Incrementer(dict):
 
     """
 
-    def __init__(self, *args, fn: Iterable[A] = None, **kwargs):
+    def __init__(self, *args, fn: Iterable[A] | None = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.unfreeze()
 
         # iter() is idempotent and iterators are iterable
         self._iterator = count() if fn is None else iter(fn)
 
-    def __setitem__(self, key: Any, val: Any):
+    def __setitem__(self, *_):
         raise KeyError("must not set values explicitly")
 
     def __getitem__(self, key: Any) -> Union[int, A]:
@@ -405,7 +410,7 @@ def dflat(
 
         return False
 
-    def rec(src: Mapping, tar: Mapping, trail: list[str]):
+    def rec(src: Mapping, tar: MutableMapping, trail: list[str]):
         for k, v in src.items():
             subtrail = trail + [str(k)]
             if descend(v, len(subtrail)):
@@ -419,9 +424,9 @@ def dflat(
     return rec(dic, tar={}, trail=[])
 
 
-def dmerge(*ds: Mapping):
+def dmerge(*ds: dict) -> dict:
     """
-    Deeply merge mappings.
+    Deeply merge dictionaries.
 
     A new deep copy is created from the keys and values from the
     provided mappings. Values of the the next mapping overwrite the
@@ -449,6 +454,8 @@ def dmerge(*ds: Mapping):
 
     work = list(ds)
     last = work.pop()
+
+    curr = {}
     while work:
         curr = work.pop().copy()
         for k, v in last.items():
@@ -468,7 +475,7 @@ def dmerge(*ds: Mapping):
 def _dconv(dic: dict, fns):
     res = {}
     for k, v in dic.items():
-        if isinstance(v, Mapping):
+        if isinstance(v, dict):
             res[k] = _dconv(v, fns)
             continue
 
