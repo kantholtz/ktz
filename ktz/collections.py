@@ -9,7 +9,7 @@ from functools import partial
 from inspect import signature
 from itertools import count
 from pathlib import Path
-from typing import Any, Callable, Optional, TypeAlias, Union
+from typing import Any, Callable, Optional, TypeAlias, TypeVar, Union, overload
 
 import yaml
 
@@ -26,22 +26,52 @@ A: TypeAlias = Any
 B: TypeAlias = Any
 C: TypeAlias = Any
 D: TypeAlias = Any
-
+E: TypeAlias = Any
 
 Index = int
 
 
-# python 3.10
-# def buckets(
-#     col: Collection[A] | Collection[tuple[B, C]],
-#     key: Optional[Callable[[Index, A], tuple[B, C]]] = None,
-#     mapper: Optional[Callable[[tuple[C]], D]] = None,
-# ) -> dict[B, list[C]] | dict[B, D]:
+@overload
 def buckets(
-    col: Union[Collection[A], Collection[tuple[B, C]]],
-    key: Optional[Callable[[Index, A], tuple[B, C]]] = None,
-    mapper: Optional[Callable[[tuple[C, ...]], D]] = None,
-) -> Union[dict[B, list[C]], dict[B, D]]:
+    col: Collection[tuple[A, B]],
+) -> dict[A, B]:
+    ...
+
+
+# + key
+@overload
+def buckets(
+    col: Collection[A],
+    key: Callable[[Index, A], tuple[C, D]],
+) -> dict[C, D]:
+    ...
+
+
+# + mapper
+@overload
+def buckets(
+    col: Collection[tuple[A, B]],
+    key: None,
+    mapper: Callable[[tuple[C, ...]], D],
+) -> dict[A, D]:
+    ...
+
+
+# + key & mapper
+@overload
+def buckets(
+    col: Collection[A],
+    key: Callable[[Index, A], tuple[C, D]],
+    mapper: Callable[[tuple[D, ...]], E],
+) -> dict[B, E]:
+    ...
+
+
+def buckets(
+    col: Collection[A] | Collection[tuple[A, B]],
+    key: Callable[[Index, A], tuple[B, C]] | None = None,
+    mapper: Callable[[tuple[C, ...]], D] | None = None,
+) -> dict[A, B] | dict[A, D] | dict[B, C] | dict[B, D]:
     """
     Sort data into buckets.
 
@@ -273,15 +303,18 @@ class Incrementer(dict):
 # --
 
 
+T = TypeVar("T")
+
+
 def drslv(
-    dic: Mapping,
+    dic: Mapping[str, T],
     chain: str,
     sep: str = ".",
     default: Any = KeyError,
     collapse: Optional[int] = None,
     # deprecated: use collapse
     skiplast: Optional[int] = None,
-):
+) -> T:
     """
     Resolve string trails in deep dictionaries.
 
