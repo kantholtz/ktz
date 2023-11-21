@@ -401,6 +401,7 @@ class Index(Generic[T]):
         Klass,
         includes: Iterable[str] = None,
         excludes: Iterable[str] = None,
+        additional: Iterable[str] = None,  # TODO test and document
     ):
         """
         Create a new index.
@@ -435,6 +436,7 @@ class Index(Generic[T]):
         """
         includes = set(includes) if includes else set()
         excludes = set(excludes) if excludes else set()
+        additional = set(additional) if additional else set()
 
         fieldnames = set(field.name for field in fields(Klass))
 
@@ -444,7 +446,7 @@ class Index(Generic[T]):
                 raise KeyError(f"Unknown fields: {rem}")
 
         self._idxs = defaultdict(dict)
-        for name in fieldnames:
+        for name in fieldnames | additional:
             if includes and name not in includes:
                 continue
 
