@@ -23,7 +23,7 @@ copyright = "2022, Felix Hamann"
 author = "Felix Hamann"
 
 # The full version, including alpha/beta/rc tags
-release = "0.3.0"
+release = "0.4.0-pre0"
 
 
 # -- General configuration ---------------------------------------------------

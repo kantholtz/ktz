@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Dataclasses &#8212; KTZ Python Tools 0.3.0 documentation</title>
+    <title>Dataclasses &#8212; KTZ Python Tools 0.4.0-pre0 documentation</title>
   
   
   
@@ -18,25 +18,26 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=0be8fc53"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ktz-dataclasses';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -51,7 +52,16 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -85,16 +95,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <header>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
   <label class="sidebar-toggle primary-toggle" for="__primary">
     <span class="fa-solid fa-bars"></span>
   </label>
   
-  <div class="navbar-header-items__start">
+  
+  <div class="col-lg-3 navbar-header-items__start">
     
       <div class="navbar-item">
+
   
 
 <a class="navbar-brand logo" href="index.html">
@@ -103,24 +117,19 @@
   
   
   
-    <p class="title logo__title">KTZ Python Tools 0.3.0 documentation</p>
+  
+    <p class="title logo__title">KTZ Python Tools 0.4.0-pre0 documentation</p>
   
 </a></div>
     
   </div>
   
-  
   <div class="col-lg-9 navbar-header-items">
     
     <div class="me-auto navbar-header-items__center">
       
-        <div class="navbar-item"><nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
+        <div class="navbar-item">
+<nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
@@ -157,20 +166,20 @@
                       </a>
                     </li>
                 
-            <div class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
                     More
                 </button>
-                <div class="dropdown-menu">
+                <ul id="pst-nav-more-links" class="dropdown-menu">
                     
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="ktz-string.html">
+                      <a class="nav-link dropdown-item nav-internal" href="ktz-string.html">
                         String
                       </a>
                     </li>
                 
-                </div>
-            </div>
+                </ul>
+            </li>
             
   </ul>
 </nav></div>
@@ -182,23 +191,27 @@
       
         <div class="navbar-item navbar-persistent--container">
           
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
       
       
         <div class="navbar-item">
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script></div>
@@ -209,27 +222,36 @@ document.write(`
   
   
     <div class="navbar-persistent--mobile">
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
     </div>
   
 
   
-    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
       <span class="fa-solid fa-outdent"></span>
     </label>
   
 </div>
 
-    </nav>
+    </div>
   
+  </header>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
@@ -240,13 +262,8 @@ document.write(`
     
       <div class="sidebar-header-items__center">
         
-          <div class="navbar-item"><nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
+          <div class="navbar-item">
+<nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
@@ -283,20 +300,20 @@ document.write(`
                       </a>
                     </li>
                 
-            <div class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
                     More
                 </button>
-                <div class="dropdown-menu">
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
                     
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="ktz-string.html">
+                      <a class="nav-link dropdown-item nav-internal" href="ktz-string.html">
                         String
                       </a>
                     </li>
                 
-                </div>
-            </div>
+                </ul>
+            </li>
             
   </ul>
 </nav></div>
@@ -308,12 +325,13 @@ document.write(`
       <div class="sidebar-header-items__end">
         
           <div class="navbar-item">
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script></div>
@@ -346,8 +364,8 @@ document.write(`
 
 
 
-<nav aria-label="Breadcrumbs">
-  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
       <a href="index.html" class="nav-link" aria-label="Home">
@@ -369,10 +387,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="module-ktz.dataclasses">
-<span id="dataclasses"></span><h1>Dataclasses<a class="headerlink" href="#module-ktz.dataclasses" title="Permalink to this heading">#</a></h1>
+<span id="dataclasses"></span><h1>Dataclasses<a class="headerlink" href="#module-ktz.dataclasses" title="Link to this heading">#</a></h1>
 <p>Extensions for dataclasses.</p>
 <dl class="simple">
 <dt>This module offers</dt><dd><p>Index: an inverted index for dataclasses
@@ -381,7 +399,7 @@ Builder: to iteratively build (immutable) data objects</p>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="ktz.dataclasses.Builder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.dataclasses.</span></span><span class="sig-name descname"><span class="pre">Builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Klass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">immutable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Builder" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.dataclasses.</span></span><span class="sig-name descname"><span class="pre">Builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Klass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">immutable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Builder" title="Link to this definition">#</a></dt>
 <dd><p>Simple builder to incrementally build a dataclass.</p>
 <p>An instance of this class maintains a kwargs dictionary
 which can be incrementally popularized. Calling the
@@ -402,7 +420,7 @@ instance attempts to build the provided dataclass object.</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Builder.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Builder.add" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Builder.add" title="Link to this definition">#</a></dt>
 <dd><p>Add properties to the dataclass.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -422,7 +440,7 @@ multiple times.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Builder.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Builder.get" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Builder.get" title="Link to this definition">#</a></dt>
 <dd><p>Get the value of the provided key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -437,7 +455,7 @@ multiple times.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.dataclasses.</span></span><span class="sig-name descname"><span class="pre">Index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Klass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ktz.dataclasses.</span></span><span class="sig-name descname"><span class="pre">Index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Klass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index" title="Link to this definition">#</a></dt>
 <dd><p>Maintain an inverted index for dataclasses.</p>
 <p>Provided instances are saved to indexes based on their
 properties. The can then be retrieved fast by those properties.</p>
@@ -465,7 +483,7 @@ properties. The can then be retrieved fast by those properties.</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.add" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.add" title="Link to this definition">#</a></dt>
 <dd><p>Add instances to index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -487,7 +505,7 @@ such instances.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.con">
-<span class="sig-name descname"><span class="pre">con</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.con" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">con</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.con" title="Link to this definition">#</a></dt>
 <dd><p>∧ : Obtain intersection of queried dataclasses.</p>
 <p>Each indexed field is searched for the associated dataclasses
 and the intersection of these results is returned.</p>
@@ -522,7 +540,7 @@ and the intersection of these results is returned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.dis">
-<span class="sig-name descname"><span class="pre">dis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.dis" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.dis" title="Link to this definition">#</a></dt>
 <dd><p>∨ : Obtain unionized subset of queried dataclasses.</p>
 <p>Each indexed field is searched for the associated dataclasses
 and the union of these results is returned.</p>
@@ -557,7 +575,7 @@ and the union of these results is returned.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.flat">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flat</span></span><a class="headerlink" href="#ktz.dataclasses.Index.flat" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flat</span></span><a class="headerlink" href="#ktz.dataclasses.Index.flat" title="Link to this definition">#</a></dt>
 <dd><p>Return all indexed dataclasses.</p>
 <p>Note that this does not return a copy. You must create a copy
 before modifying this datastructure, otherwise you can expect
@@ -574,7 +592,7 @@ undefined behaviour.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.freeze">
-<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.freeze" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.freeze" title="Link to this definition">#</a></dt>
 <dd><p>Do not allow changes to the Index.</p>
 <p>This removes the ability to mutate the Index state
 by freezing the underlying data management.</p>
@@ -604,7 +622,7 @@ by freezing the underlying data management.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.get" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.get" title="Link to this definition">#</a></dt>
 <dd><p>Shortcut for single-field queries.</p>
 <p>If a single field is given, no distinction between dis() and
 con() exists. So this is a nice shortcut for simple queries.</p>
@@ -637,7 +655,7 @@ con() exists. So this is a nice shortcut for simple queries.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.gets">
-<span class="sig-name descname"><span class="pre">gets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.gets" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">gets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.gets" title="Link to this definition">#</a></dt>
 <dd><p>Shortcut for single-field, single-value queries.</p>
 <p>If a single field is given, no distinction between dis() and
 con() exists. So this is a nice shortcut for simple queries
@@ -671,7 +689,7 @@ where only one value is expected.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.has" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.has" title="Link to this definition">#</a></dt>
 <dd><p>Test whether a value is indexed for one or more instances.</p>
 <p>This is basically a shortcut for single-key checks. If more
 kwargs are provided, use a len check on con or dis instead.</p>
@@ -679,7 +697,7 @@ kwargs are provided, use a len check on con or dis instead.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.keys">
-<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.keys" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.keys" title="Link to this definition">#</a></dt>
 <dd><p>Obtain indexed keys for the given field.</p>
 <p>This enumerates the possible keys that can be used to retrieve
 indexed dataclasses</p>
@@ -713,7 +731,7 @@ indexed dataclasses</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ktz.dataclasses.Index.unfreeze">
-<span class="sig-name descname"><span class="pre">unfreeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.unfreeze" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">unfreeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ktz.dataclasses.Index.unfreeze" title="Link to this definition">#</a></dt>
 <dd><p>Allow changes to the Index (the default).</p>
 <p>This adds the ability to mutate the Index state
 to allow adding and deleting objects. See Index.freeze
@@ -729,11 +747,10 @@ for an usage example.</p>
               
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="ktz-collections.html"
@@ -753,10 +770,7 @@ for an usage example.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -765,11 +779,14 @@ for an usage example.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
   <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ktz.dataclasses.Builder"><code class="docutils literal notranslate"><span class="pre">Builder</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ktz.dataclasses.Builder.add"><code class="docutils literal notranslate"><span class="pre">Builder.add()</span></code></a></li>
@@ -793,6 +810,7 @@ for an usage example.</p>
   </nav></div>
 
   <div class="sidebar-secondary-item">
+
   <div class="tocsection sourcelink">
     <a href="_sources/ktz-dataclasses.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
@@ -813,8 +831,8 @@ for an usage example.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -822,6 +840,7 @@ for an usage example.</p>
     <div class="footer-items__start">
       
         <div class="footer-item">
+
   <p class="copyright">
     
       © Copyright 2022, Felix Hamann.
@@ -831,8 +850,9 @@ for an usage example.</p>
 </div>
       
         <div class="footer-item">
+
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     <br/>
   </p>
 </div>
@@ -840,10 +860,12 @@ for an usage example.</p>
     </div>
   
   
+  
     <div class="footer-items__end">
       
-        <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.1.
 </p></div>
       
     </div>
