@@ -312,8 +312,6 @@ def drslv(
     sep: str = ".",
     default: Any = KeyError,
     collapse: Optional[int] = None,
-    # deprecated: use collapse
-    skiplast: Optional[int] = None,
 ) -> T:
     """
     Resolve string trails in deep dictionaries.
@@ -365,14 +363,6 @@ def drslv(
     >>> drslv(dic, 'foo.*.a')  # only works for single-element dicts
     1
     """
-    if skiplast:
-        warnings.warn(
-            "'skiplast' is deprecated; use 'collapse' instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        collapse = skiplast
-
     crumbs = chain.split(sep)
 
     try:

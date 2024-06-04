@@ -3,9 +3,8 @@
 import tempfile
 from pathlib import Path
 
-import pytest
-
 import ktz
+import pytest
 from ktz import filesystem as fs
 
 
@@ -123,12 +122,3 @@ class TestPathRotate:
 
             with (root / "test.2.txt").open(mode="r") as fd:
                 assert content2 == fd.read()
-
-
-class TestGitHash:
-    def test_githash(self):
-        with pytest.deprecated_call():
-            # don't know how to verify return value
-            # for now should suffice that it is callable
-            # errors would concern upstream lib anyway
-            fs.git_hash()

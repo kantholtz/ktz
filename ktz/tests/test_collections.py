@@ -5,13 +5,20 @@ from contextlib import ExitStack
 
 import pytest
 import yaml
-
-from ktz.collections import (Incrementer, buckets, dconv, dflat, dmerge, drslv,
-                             lflat, ryaml, unbucket)
+from ktz.collections import (
+    Incrementer,
+    buckets,
+    dconv,
+    dflat,
+    dmerge,
+    drslv,
+    lflat,
+    ryaml,
+    unbucket,
+)
 
 
 class TestBuckets:
-
     #
     #  without key and without mapper
     #
@@ -334,14 +341,6 @@ class TestDrslv:
 
         with pytest.raises(KeyError):
             drslv(d, "1.1.3", collapse=2)
-
-    def test_deprecated_skiplast(self):
-        d = {"1": {"1": {"1": "1.1.1", "2": "1.1.2"}}}
-
-        # skiplast
-        with pytest.deprecated_call():
-            res = drslv(d, "1.1.1", skiplast=1)
-            assert res == {"1": "1.1.1", "2": "1.1.2"}
 
     def test_wildcard(self):
         d = dict(a=dict(foo=dict(b=3)))

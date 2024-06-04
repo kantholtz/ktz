@@ -154,28 +154,3 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
     new = _new(current, n=1, suffixes=current.suffixes)
     _rotate(new)
     current.rename(new)
-
-
-def git_hash() -> str:
-    """
-    Obtain the current git hash.
-
-    Returns
-    -------
-    str
-        Current git hash
-
-    Examples
-    --------
-    >>> from ktz.filesystem import git_hash
-    >>> git_hash()
-    'bedee821a4c1e1217cee783b33ad3bea98dbbb9d'
-
-    """
-    warnings.warn("to be removed in 0.4", DeprecationWarning)
-
-    import git
-
-    repo = git.Repo(search_parent_directories=True)
-    # dirty = '-dirty' if repo.is_dirty else ''
-    return str(repo.head.object.hexsha)
