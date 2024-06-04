@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "ktz"
+version = "0.3.0"
+description = "Kantholtz' Python Toolbox"
+authors = ["Felix Hamann <felix@hamann.xyz>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+PyYAML = "^6.0.1"
+notebook = "^7.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.25.0"
+Sphinx = "^7.3.7"
+sphinx-toolbox = "^3.5.0"
+numpydoc = "^1.7.0"
+pydata-sphinx-theme = "^0.15.3"
+pytest = "^8.2.1"
+pytest-watch = "^4.2.0"
+pytest-cov = "^5.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
