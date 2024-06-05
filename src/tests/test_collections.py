@@ -487,5 +487,6 @@ class TestRyaml:
 
             ret = ryaml(fd1.name, fd2.name, xyz=dict(a=3, c=3))
             assert ret == dict(foo=3, bar=2, xyz=dict(a=3, b=2, c=3))
+            return
 
         assert False
