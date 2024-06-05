@@ -20,13 +20,12 @@ jobs:
       - run: poetry install
       - run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
 
-      - run: poetry run pytest
       - uses: jakebailey/pyright-action@v2
 
       - name: run tests
         run: |
-          coverage run -m pytest
-          coverage report
+          poetry run coverage run -m pytest
+          poetry run coverage report
 
       - name: build package
         run: python -m build
