@@ -219,7 +219,6 @@ class Actor(abc.ABC, ctx.Process):
 
     # required handler
 
-    @abc.abstractmethod
     def recv(self, msg):
         ...
 
