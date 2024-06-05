@@ -224,7 +224,6 @@ class Actor(abc.ABC, ctx.Process):
     def recv(self, msg):
         ...
 
-
     def startup(self):
         """Implement as callback before loop()."""
         pass
