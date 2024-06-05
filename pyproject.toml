@@ -21,6 +21,7 @@ pytest = "^8.2.1"
 pytest-cov = "^5.0.0"
 pytest-watch = "^4.2.0"
 pytest-pudb = "^0.7.0"
+pyright = "^1.1.365"
 
 [build-system]
 requires = ["poetry-core"]

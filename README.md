@@ -10,31 +10,36 @@ Kantholtz' personal Python toolbox. Check out the [documentation here](https://k
 
 ## Installation
 
-Python 3.9 is required.
+Python 3.11 is required.
 
-``` console
-$ conda create -n ktz python=3.9
-$ conda activate ktz
-$ pip install ktz
+```console
+pip install ktz
 ```
+
 
 For a local installation with all dev dependencies:
 
 ``` console
 $ git clone https://github.com/kantholtz/ktz.git
 $ cd ktz
-$ conda create -n ktz python=3.9
+$ conda create -n ktz python=3.11
 $ conda activate ktz
-$ pip install .[dev]
+$ poetry install --with dev
 
 # run tests
-$ pytest
+$ poetry run pytest
 
 # to continually run tests
-$ ptw -c
+$ poetry run ptw -c
+
+# static typing
+$ poetry run pyright src
 
 # to check code coverage
-$ coverage run -m pytest
-$ coverage report
-$ coverage html
+$ poetry run coverage run -m pytest
+$ poetry run coverage report
+$ poetry run coverage html
+
+# build package
+$ poetry build
 ```

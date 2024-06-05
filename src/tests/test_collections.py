@@ -2,6 +2,7 @@
 
 import tempfile
 from contextlib import ExitStack
+from typing import Any, Callable, Iterable
 
 import pytest
 import yaml
@@ -51,10 +52,16 @@ class TestBuckets:
     def test_buckets_mapper(self):
         ref = {1: 9, 5: 13}
         ret = buckets(
-            ((1, 2), (1, 3), (1, 4), (5, 6), (5, 7)),
+            col=((1, 2), (1, 3), (1, 4), (5, 6), (5, 7)),
             mapper=sum,
         )
         assert ref == ret
+
+    def f(self, y: Callable[[Iterable[Any]], int], *args) -> int:
+        return y(*args)
+
+    def g(self):
+        return self.f(sum, 1, 2, 3)
 
     #
     #  with key and with mapper
@@ -382,7 +389,7 @@ class TestDConv:
         assert d2 == dict(a=2, b=3, c=[])
 
     def test_key(self):
-        def fn(v, k):
+        def fn(_, k):
             if k == "foo":
                 return True
             return False
@@ -428,8 +435,10 @@ class TestRyaml:
             yaml.dump(d2, fd2)
 
             ret = ryaml(fd1.name, fd2.name)
+            assert ret == dict(foo=3, bar=2, xyz=4)
+            return
 
-        assert ret == dict(foo=3, bar=2, xyz=4)
+        assert False
 
     def test_multi_deep(self):
         d1 = dict(foo=dict(a=1, b=2), bar=2)
@@ -443,8 +452,10 @@ class TestRyaml:
             yaml.dump(d2, fd2)
 
             ret = ryaml(fd1.name, fd2.name)
+            assert ret == dict(foo=dict(a=3, b=2, c=4), bar=2, xyz=5)
+            return
 
-        assert ret == dict(foo=dict(a=3, b=2, c=4), bar=2, xyz=5)
+        assert False
 
     def test_overwrites(self):
         d1 = dict(foo=1, bar=2)
@@ -458,8 +469,10 @@ class TestRyaml:
             yaml.dump(d2, fd2)
 
             ret = ryaml(fd1.name, fd2.name, xyz=5)
+            assert ret == dict(foo=3, bar=2, xyz=5)
+            return
 
-        assert ret == dict(foo=3, bar=2, xyz=5)
+        assert False
 
     def test_overwrites_deep(self):
         d1 = dict(foo=1, bar=2)
@@ -473,5 +486,6 @@ class TestRyaml:
             yaml.dump(d2, fd2)
 
             ret = ryaml(fd1.name, fd2.name, xyz=dict(a=3, c=3))
+            assert ret == dict(foo=3, bar=2, xyz=dict(a=3, b=2, c=3))
 
-        assert ret == dict(foo=3, bar=2, xyz=dict(a=3, b=2, c=3))
+        assert False

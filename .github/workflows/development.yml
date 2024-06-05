@@ -20,7 +20,7 @@ jobs:
       - run: poetry install
       - run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
 
-      - uses: jakebailey/pyright-action@v2
+      - run: poetry run pyright src
       - run: poetry run coverage run -m pytest
       - run: poetry run coverage report
 

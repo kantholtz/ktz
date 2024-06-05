@@ -42,6 +42,7 @@ def buckets(
 def buckets(
     col: Collection[A],
     key: Callable[[Index, A], tuple[C, D]],
+    mapper: None = ...,
 ) -> dict[C, D]:
     ...
 
@@ -50,8 +51,8 @@ def buckets(
 @overload
 def buckets(
     col: Collection[tuple[A, B]],
-    key: None,
-    mapper: Callable[[tuple[C, ...]], D],
+    key: None = ...,
+    mapper: Callable[[tuple[C, ...]], D] = ...,
 ) -> dict[A, D]:
     ...
 
@@ -510,7 +511,7 @@ def _dconv(dic: dict, fns):
     return res
 
 
-def dconv(dic: dict, *convert: Callable[[A, B], C]):
+def dconv(dic: dict, *convert: Callable[[A], C] | Callable[[A, B], C]):
     """
     Convert a dictionary deeply.
 

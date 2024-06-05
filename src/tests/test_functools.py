@@ -4,7 +4,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from ktz import functools as ft
 
 
@@ -26,7 +25,7 @@ class TestCascade:
         outside = 1
 
         @run.cache("x")
-        def foo():
+        def foo():  # type: ignore
             return outside
 
         # from function execution
@@ -185,7 +184,7 @@ class TestCascade:
         run = ft.Cascade(prefix=cachedir, x="x")
 
         @run.cache("x")
-        def f():
+        def f():  # type: ignore
             return outside
 
         # from computed value
@@ -201,7 +200,7 @@ class TestCascade:
             return outside  # pragma: no cover
 
         # from cache
-        assert f() == 1
+        assert f() == 1  # type: ignore
         assert run.get("x") == 1
 
     def test_get_raises(self, cachedir):
