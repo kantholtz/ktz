@@ -330,7 +330,7 @@ class Relay:
 
         Parameters
         ----------
-        *args : Union[Actor, Iterable[Actor]]
+        *args : Actor | Iterable[Actor]
             Actors or sets of Actors.
 
         """
