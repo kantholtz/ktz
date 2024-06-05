@@ -219,10 +219,11 @@ class Actor(abc.ABC, ctx.Process):
 
     # required handler
 
+    # optional handler
+
     def recv(self, msg):
         ...
 
-    # optional handler
 
     def startup(self):
         """Implement as callback before loop()."""
