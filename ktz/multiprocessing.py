@@ -6,14 +6,10 @@ import abc
 import enum
 import logging
 import logging.handlers
-import threading
 import multiprocessing as mp
-
-from typing import Any
-from typing import Union
-from typing import Optional
+import threading
 from collections.abc import Iterable
-
+from typing import Any
 
 log = logging.getLogger(__name__)
 ctx = mp.get_context()
@@ -62,6 +58,20 @@ class Actor(abc.ABC, ctx.Process):
     """
 
     group: str
+
+    _inbox: mp.Queue
+    _outbox: mp.Queue
+
+    _q_log: mp.Queue
+    _log_name: str
+
+    # TODO how to type this?
+    #   - it is mp.Value (Synchronized[int])
+    #   - https://github.com/python/typeshed/pull/11833
+    #   - https://github.com/python/typeshed/issues/4266
+    _received_poison: Any
+    _expected_poison: int
+    _peer_count: int
 
     def _add_poison(self):
         poison = self._received_poison
@@ -207,6 +217,12 @@ class Actor(abc.ABC, ctx.Process):
             args, kwargs = data
             self.recv(*args, **kwargs)
 
+    # required handler
+
+    @abc.abstractmethod
+    def recv(self, msg):
+        ...
+
     # optional handler
 
     def startup(self):
@@ -271,12 +287,12 @@ class Relay:
     """
 
     groups: dict[str, list[Actor]]
-    maxsize: Optional[int]
+    maxsize: int | None
 
     def __init__(
         self,
-        maxsize: Optional[int] = None,
-        log: Optional[str] = None,
+        maxsize: int | None = None,
+        log: str | None = None,
     ):
         """Create a new Relay.
 
@@ -288,9 +304,9 @@ class Relay:
 
         Parameters
         ----------
-        maxsize : Optional[int]
+        maxsize : int | None
             Maximum messages queued between senders and receivers.
-        log : Optional[str]
+        log : str | None
             Name of the logger, defaults to implementers module
 
         """
@@ -302,8 +318,8 @@ class Relay:
 
     def connect(
         self,
-        *args: Union[Actor, Iterable[Actor]],
-        **kwargs: Union[Actor, Iterable[Actor]],
+        *args: Actor | Iterable[Actor],
+        **kwargs: Actor | Iterable[Actor],
     ):
         """
         Connect Actors to form a processing pipeline.
@@ -319,7 +335,7 @@ class Relay:
 
         """
 
-        def ensure_list(obj):
+        def ensure_list(obj) -> list[Actor]:
             try:
                 return list(iter(obj))
             except TypeError:
@@ -334,27 +350,26 @@ class Relay:
         # connect pairs of actors by a single queue.
         # the receivers need to know how many poison
         # pills they need to expect.
-        instances = list(groups.values())
-        for sender, receiver in zip(instances, instances[1:]):
+        instances: list[list[Actor]] = list(groups.values())
 
+        for sender, receiver in zip(instances, instances[1:]):
             q = ctx.Queue(self.maxsize) if self.maxsize else ctx.Queue()
 
             for actor in sender:
                 actor._outbox = q
 
-            poison = ctx.Value("I", 0)  # I: uint
             for actor in receiver:
                 actor._inbox = q
                 actor._peer_count = len(receiver)
                 actor._expected_poison = len(sender)
-                actor._received_poison = poison
+                actor._received_poison = ctx.Value("I", 0)  # I: uint
 
         self.groups = groups
         log.info(f"relay: maintaining {len(self.groups)} groups")
 
     # logthread
 
-    def _start_logthread(self) -> mp.Queue:
+    def _start_logthread(self):
         log.info("relay: starting logthread")
 
         def _log_thread(q):
@@ -383,7 +398,6 @@ class Relay:
 
         for group, actors in self.groups.items():
             for actor in actors:
-
                 actor._q_log = self._q_log
                 actor._log_name = self._log or actor.__class__.__module__
                 actor.group = group
@@ -402,7 +416,7 @@ class Relay:
 
     # lifecycle
 
-    def start(self, handler: Handler = None):
+    def start(self, handler: Handler | None = None):
         """
         Start the relay.
 
