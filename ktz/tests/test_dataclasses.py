@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
-import pytest
-
 import ktz
+import pytest
 from ktz.dataclasses import Builder, Index
 
 
@@ -43,7 +42,7 @@ class TestIndex:
             idx.dis(asd=5)
 
     def _test_single(self, fn):
-        assert fn() == {}
+        assert fn() == set()
 
         assert fn(i=1) == {a[0], a[1]}
         assert fn(i=2) == {a[2]}

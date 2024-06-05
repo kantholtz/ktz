@@ -62,9 +62,6 @@ class TestPath:
             path = fs.path(dirpath, create=True)
             assert path.exists() and path.is_dir()
 
-    def test_message(self):
-        fs.path("foo", message="Foo {path} bar {path_abbrv}")
-
 
 class TestPathRotate:
     def test_rotate(self):

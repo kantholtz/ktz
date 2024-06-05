@@ -7,7 +7,7 @@ import pickle
 from dataclasses import dataclass, field, replace
 from functools import wraps
 from pathlib import Path
-from typing import Generic, TypeVar, Union
+from typing import Generic, TypeVar
 
 from ktz.filesystem import path
 
@@ -44,7 +44,7 @@ class Maybe(Generic[T]):
     loaded: bool
     cached: bool
 
-    data: T = field(default=None)
+    data: T | None = field(default=None)
 
     def __str__(self):
         """State information."""
@@ -245,26 +245,25 @@ class Cascade:
 
     def __init__(
         self,
-        prefix: Union[str, Path] = None,
-        **kwargs: Union[str, Path],
+        prefix: str | Path | None = None,
+        **kwargs: str | Path,
     ):
         """
         Create a cached function cascade.
 
         Parameters
         ----------
-        prefix : Union[str, Path]
+        prefix : str | Path
             Optional basepath to be prepended to all cache files
-        **kwargs : Union[str, Path]
+        **kwargs : str | Path
             Register data keys
 
         """
-        self.path = path(prefix) if path else path(".")
+        self.path = path(prefix) if prefix else path(".")
         self.data = {}
 
         found = False
         while kwargs:
-
             name, cachefile = kwargs.popitem()  # lifo
             cache = self.path / cachefile
 

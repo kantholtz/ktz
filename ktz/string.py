@@ -4,15 +4,9 @@
 
 
 import hashlib
-from itertools import zip_longest
-
-from typing import Any
-from typing import Union
-from typing import Optional
-from typing import Callable
-
 from collections.abc import Iterable
-
+from itertools import zip_longest
+from typing import Any, Callable
 
 A = Any
 
@@ -35,9 +29,9 @@ def _apply_fns(col, fn, fns):
 def decode_line(
     encoded: bytes,
     sep: str = ",",
-    fn: Callable[[A], str] = None,
-    fns: Iterable[Optional[Callable[[str], A]]] = None,
-) -> tuple[Union[str, A]]:
+    fn: Callable[[str], A] | None = None,
+    fns: Iterable[Callable[[str], A] | None] | None = None,
+) -> tuple[str | A, ...]:
     """
     Decode a value list bytestring.
 
@@ -51,9 +45,9 @@ def decode_line(
         The value bytestring
     sep : str
         Separator token
-    fn  : Optional[Callable[[A], str]]
+    fn  : Callable[[A], str] | None
         Optional converter applied to all, overrides fns
-    fns : Iterable[Optional[Callable[[str], A]]]
+    fns : Iterable[Callable[[str], A] | None]
         Optional converter functions
 
     Returns
@@ -76,10 +70,10 @@ def decode_line(
 
 
 def encode_line(
-    data: Iterable[Union[str, A]],
+    data: Iterable[str | A],
     sep: str = ",",
-    fn: Callable[[A], str] = None,
-    fns: Iterable[Optional[Callable[[A], str]]] = None,
+    fn: Callable[[A], str] | None = None,
+    fns: Iterable[Callable[[A], str] | None] | None = None,
 ) -> bytes:
     r"""
     Encode a value collection.
@@ -94,9 +88,9 @@ def encode_line(
         Collection to be encoded
     sep : str
         Separator token
-    fn  : Optional[Callable[[A], str]]
+    fn  : Callable[[A], str] | None
         Optional converter applied to all, overrides fns
-    fns : Iterable[Optional[Callable[[A], str]]]
+    fns : Iterable[Callable[[A], str] | None]
         Optional converter functions
 
     Returns
@@ -120,9 +114,7 @@ def encode_line(
     return ((sep).join(data)).encode("unicode_escape") + b"\n"
 
 
-def args_hash(
-    *args,
-) -> str:
+def args_hash(*args) -> str:
     """
     Produce a hash value for the provided args.
 

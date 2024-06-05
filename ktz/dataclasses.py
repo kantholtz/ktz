@@ -11,7 +11,7 @@ This module offers
 from collections import defaultdict
 from collections.abc import Iterable, Iterator
 from dataclasses import fields
-from typing import Any, Generic, TypeVar, Union
+from typing import Any, Generic, TypeVar
 
 import ktz
 
@@ -25,7 +25,7 @@ class Index(Generic[T]):
     Maintain an inverted index for dataclasses.
 
     Provided instances are saved to indexes based on their
-    properties. The can then be retrieved fast by those properties.
+    properties. They can then be retrieved fast by those properties.
 
     Methods
     -------
@@ -37,6 +37,13 @@ class Index(Generic[T]):
       Retrieve the intersection result for multi-key queries
 
     """
+
+    def _raise_if_frozen(self):
+        # we could also catch the AttributeError
+        # raised for frozenset.add but explicit is
+        # better than implicit
+        if isinstance(self._flat, frozenset):
+            raise ktz.Error("Cannot mutate a frozen Index")
 
     def __len__(self) -> int:
         """
@@ -81,6 +88,9 @@ class Index(Generic[T]):
         >>> len(idx)
         0
         """
+        self._raise_if_frozen()
+        assert isinstance(self._flat, set)
+
         self._flat.remove(obj)
         for key, idx in self._idxs.items():
             idx[getattr(obj, key)].remove(obj)
@@ -128,7 +138,7 @@ class Index(Generic[T]):
         return self
 
     @property
-    def flat(self) -> set[T]:
+    def flat(self) -> set[T] | frozenset[T]:
         """Return all indexed dataclasses.
 
         Note that this does not return a copy. You must create a copy
@@ -284,7 +294,7 @@ class Index(Generic[T]):
 
         """
         agg = self._agg(**kwargs)
-        return {} if not agg else set.union(*agg)
+        return set() if not agg else set.union(*agg)
 
     def con(self, **kwargs) -> set[T]:
         """
@@ -324,7 +334,7 @@ class Index(Generic[T]):
         # https://stackoverflow.com/questions/30845469/time-complexity-of-python-set-intersection-for-n-sets
 
         agg = self._agg(**kwargs)
-        return {} if not agg else set.intersection(*agg)
+        return set() if not agg else set.intersection(*agg)
 
     def keys(self, field: str) -> set[Any]:
         """
@@ -361,7 +371,7 @@ class Index(Generic[T]):
 
         return set(self._idxs[field])
 
-    def add(self, ts: Union[T, Iterable[T]]) -> "Index":
+    def add(self, ts: T | Iterable[T]) -> "Index":
         """
         Add instances to index.
 
@@ -378,18 +388,17 @@ class Index(Generic[T]):
             self
 
         """
-        # we could also catch the AttributeError
-        # raised for frozenset.add but explicit is
-        # better than implicit
-        if type(self._flat) is frozenset:
-            raise ktz.Error("Cannot mutate a frozen Index")
+        self._raise_if_frozen()
 
         try:
-            gen = iter(ts)
+            gen = iter(ts)  # type: ignore
         except TypeError:
             gen = iter([ts])
 
         for t in gen:
+            self._raise_if_frozen()
+            assert isinstance(self._flat, set)
+
             self._flat.add(t)
             for key in self._idxs:
                 self._idxs[key][getattr(t, key)].add(t)
@@ -399,9 +408,9 @@ class Index(Generic[T]):
     def __init__(
         self,
         Klass,
-        includes: Iterable[str] = None,
-        excludes: Iterable[str] = None,
-        additional: Iterable[str] = None,  # TODO test and document
+        includes: Iterable[str] | None = None,
+        excludes: Iterable[str] | None = None,
+        additional: Iterable[str] | None = None,  # TODO test and document
     ):
         """
         Create a new index.

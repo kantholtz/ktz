@@ -4,8 +4,6 @@
 
 import logging
 import pathlib
-import warnings
-from typing import Optional, Union
 
 import ktz
 
@@ -13,12 +11,11 @@ log = logging.getLogger(__name__)
 
 
 def path(
-    name: Union[str, pathlib.Path],
+    name: str | pathlib.Path,
     create: bool = False,
     exists: bool = False,
-    is_dir: Optional[bool] = None,
-    is_file: Optional[bool] = None,
-    message: str = None,
+    is_dir: bool | None = None,
+    is_file: bool | None = None,
 ) -> pathlib.Path:
     """
     Create paths.
@@ -28,18 +25,16 @@ def path(
 
     Parameters
     ----------
-    name : Union[str, pathlib.Path]
+    name : str | pathlib.Path
         The path in question
     create : bool
         Whether to create a directory if it does not exist
     exists : bool
         Check if the path exists, otherwise raise
-    is_dir : Optional[bool]
+    is_dir : bool | None
         Check if path is a directory, otherwise raise
-    is_file : Optional[bool]
+    is_file : bool | None
         Check if path is a file, otherwise raise
-    message : str
-        A message to be logged
 
     Returns
     -------
@@ -79,14 +74,13 @@ def path(
     if create:
         path.mkdir(exist_ok=True, parents=True)
 
-    if message:
-        path_abbrv = f"{path.parent.name}/{path.name}"
-        log.info(message.format(path=path, path_abbrv=path_abbrv))
-
     return path
 
 
-def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
+def path_rotate(
+    current: str | pathlib.Path,
+    keep: int | None = None,
+):
     """
     Rotate a file.
 
@@ -99,7 +93,7 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
 
     Parameters
     ----------
-    current : Union[str, pathlib.Path]
+    current : str | pathlib.Path
         Target file or directory
     keep : int
         How many rotated files to keep at most
@@ -131,11 +125,11 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
 
     def _new(
         p: pathlib.Path,
-        n: int = None,
-        suffixes: list[str] = None,
+        n: int | None = None,
+        suffixes: list[str] | None = None,
     ) -> pathlib.Path:
         name = p.name.split(".")[0]  # .stem returns foo.tar for foo.tar.gz
-        return p.parent / "".join([name, "." + str(n)] + suffixes)
+        return p.parent / "".join([name, "." + str(n)] + (suffixes or []))
 
     def _rotate(p: pathlib.Path):
         if p.exists():
@@ -146,7 +140,7 @@ def path_rotate(current: Union[str, pathlib.Path], keep: int = None):
 
             _rotate(new)
 
-            if n <= keep:
+            if keep and n <= keep:
                 p.rename(new)
             else:
                 p.unlink()

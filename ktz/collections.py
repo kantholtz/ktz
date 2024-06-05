@@ -2,14 +2,13 @@
 
 import copy
 import logging
-import warnings
 from collections import defaultdict
 from collections.abc import Collection, Generator, Iterable, Mapping, MutableMapping
 from functools import partial
 from inspect import signature
 from itertools import count
 from pathlib import Path
-from typing import Any, Callable, Optional, TypeAlias, TypeVar, Union, overload
+from typing import Any, Callable, TypeAlias, TypeVar, overload
 
 import yaml
 
@@ -81,16 +80,16 @@ def buckets(
 
     Parameters
     ----------
-    col : Union[Collection[A], Collection[tuple[B, C]]]
+    col : Collection[A] | Collection[tuple[B, C]]
         Collection to be partitioned
-    key : Optional[Callable[[Index, A], tuple[B, C]]]
+    key : Callable[[Index, A], tuple[B, C]] | None
         Optional function that returns (key, value) tuples
-    mapper : Optional[Callable[[tuple[C]], D]]
+    mapper : Callable[[tuple[C]], D] | None
         Optional function that takes a bucket and maps it
 
     Returns
     -------
-    Union[Mapping[B, list[C]], Mapping[B, D]]
+    Mapping[B, list[C]] | Mapping[B, D]
         A dictionary which maps bucket identifieres to their data
 
     Examples
@@ -149,8 +148,8 @@ def unbucket(
     return [(key, el) for key, lis in buckets.items() for el in lis]
 
 
-# cannot get Union[list, tuple] to be a Generic
-Nested = Union[list[A], A]
+# cannot get list | tuple to be a Generic
+Nested = list[A] | A
 
 
 def lflat(
@@ -250,7 +249,7 @@ class Incrementer(dict):
     def __setitem__(self, *_):
         raise KeyError("must not set values explicitly")
 
-    def __getitem__(self, key: Any) -> Union[int, A]:
+    def __getitem__(self, key: Any) -> int | A:
         if self._frozen and key not in self:
             raise NameError(f"Key '{key}' not present and incrementer is frozen.")
 
@@ -307,18 +306,18 @@ T = TypeVar("T")
 
 
 def drslv(
-    dic: Mapping[str, T],
+    dic: dict[str, T],
     chain: str,
     sep: str = ".",
     default: Any = KeyError,
-    collapse: Optional[int] = None,
-) -> T:
+    collapse: int | None = None,
+) -> T | dict[str, T]:
     """
     Resolve string trails in deep dictionaries.
 
     For example, with sep="." and collapse=0
-    foo.bar.baz -> dic['foo']['bar']['baz']. Setting
-    collapse=1 would return dic['foo']['bar'] = {'baz': ...}
+    chain=foo.bar.baz retrieves dic['foo']['bar']['baz'].
+    Setting collapse=1 returns dic['foo']['bar'] = {'baz': ...}
 
     It is also possible to use wildcards in the querz string
     to skip unknown but unambiguous (i.e. single-key dict)
@@ -332,7 +331,7 @@ def drslv(
         Query string
     sep : str
         How the chain needs to be split
-    collapse : Optional[int]
+    collapse : int | None
         Return an n-level deep dict instead
     default : Any
         For missing keys; defaults to raising a KeyError
@@ -364,21 +363,22 @@ def drslv(
     1
     """
     crumbs = chain.split(sep)
+    ret: T | dict[str, T] = dic
 
     try:
         trail = []
         for key in crumbs:
-            if not isinstance(dic, dict):
+            if not isinstance(ret, dict):
                 raise KeyError
 
-            trail.append(dic)
+            trail.append(ret)
 
             if key == "*":
-                if len(dic) > 1:
+                if len(ret) > 1:
                     raise KeyError(f"Multiple candidates for wildcard: {list(dic)}")
-                key = list(dic)[0]
+                key = list(ret)[0]
 
-            dic = dic[key]
+            ret = ret[key]
 
     except KeyError as err:
         if default == KeyError:
@@ -386,13 +386,13 @@ def drslv(
 
         return default
 
-    return trail[-collapse] if collapse else dic
+    return trail[-collapse] if collapse else ret
 
 
 def dflat(
     dic,
     sep: str = ".",
-    only: Optional[int] = None,
+    only: int | None = None,
 ):
     """
     Flatten a deep dictionary with string keys.
@@ -408,7 +408,7 @@ def dflat(
         The dictionary to be flattened
     sep : str
         Separator to concatenate the keys with
-    only : Optional[int]
+    only : int | None
         Stops flattening after the provided depth
 
     Examples
@@ -545,7 +545,7 @@ def dconv(dic: dict, *convert: Callable[[A, B], C]):
     return _dconv(dic, fns)
 
 
-def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
+def ryaml(*configs: Path | str, **overwrites) -> dict:
     """
     Load and join configurations from yaml and kwargs.
 
@@ -555,7 +555,7 @@ def ryaml(*configs: Union[Path, str], **overwrites) -> dict:
 
     Parameters
     ----------
-    *configs : Union[Path, str]
+    *configs : Path | str
         Config files to be read and merged
     **overwrites : Any
         To overwrite loaded values
