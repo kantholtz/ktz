@@ -35,3 +35,4 @@ jobs:
           python_version: 3.11
           repository_username: __token__
           repository_password: ${{ secrets.PYPI_API_TOKEN }}
+          pypi_token: ${{ secrets.PYPI_API_TOKEN }}
