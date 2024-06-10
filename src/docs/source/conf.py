@@ -15,6 +15,11 @@
 
 # sys.path.insert(0, os.path.abspath("../.."))
 
+import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path("../..").absolute()))
+
 
 # -- Project information -----------------------------------------------------
 
@@ -23,7 +28,7 @@ copyright = "2022, Felix Hamann"
 author = "Felix Hamann"
 
 # The full version, including alpha/beta/rc tags
-release = "0.4.0-pre0"
+release = "0.4.0"
 
 
 # -- General configuration ---------------------------------------------------
