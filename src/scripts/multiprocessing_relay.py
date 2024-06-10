@@ -64,23 +64,17 @@ and the results to multiprocessing_relay.txt.
 """
 
 
-import time
 import logging
 import logging.config
 import multiprocessing as mp
-from functools import partial
+import time
+from collections.abc import Iterable
 from dataclasses import dataclass
+from functools import partial
 
 import yaml
+from ktz.multiprocessing import Actor, Control, Handler, Relay
 from tqdm import tqdm as _tqdm
-
-from ktz.multiprocessing import Control
-from ktz.multiprocessing import Actor
-from ktz.multiprocessing import Relay
-from ktz.multiprocessing import Handler
-
-from collections.abc import Iterable
-
 
 LOG = "ktz.demo"
 tqdm = partial(_tqdm, ncols=80)
@@ -180,11 +174,11 @@ class Consumer(Base):
 class Worker(Base):
     """Relay messages further down the line."""
 
-    def recv(self, message: str):
+    def recv(self, msg: str):
         """Relays a message with delay."""
         time.sleep(self.delay)
         self.incr()
-        self.send(f"{message} handled by {self.group}/{self.name}")
+        self.send(f"{msg} handled by {self.group}/{self.name}")
 
 
 class TQDMHandler(Handler):
@@ -192,7 +186,7 @@ class TQDMHandler(Handler):
 
     groups: dict
 
-    def __init__(self, groups: Iterable[dict]):
+    def __init__(self, groups: dict[str, dict]):
         """Create a tqdm handler.
 
         Expects groups to be given. Each group can be configured with
@@ -258,7 +252,7 @@ def main():
     relay.connect(
         **{
             # instantiate "count" many Actor instances and add sink queue for stats
-            group: [v["Klass"](sink=stats.q, **v["kwargs"]) for _ in range(v["count"])]
+            group: [v["Klass"](sink=stats.q, **v["kwargs"]) for _ in range(v["count"])]  # type: ignore
             for group, v in config.items()
         }
     )
