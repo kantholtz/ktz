@@ -160,15 +160,24 @@ class Index(Generic[T]):
 
     def _agg(self, **kwargs) -> list[set[T]]:
         agg = []
-        for key, val in kwargs.items():
-            if key not in self._idxs:
-                self._raise_keyerror(key)
 
-            sub = set()
-            for val in val if type(val) is set else {val}:
-                sub |= self._idxs[key].get(val, set())
+        for idx_key, val_keys in kwargs.items():
+            if idx_key not in self._idxs:
+                self._raise_keyerror(idx_key)
 
-            agg.append(sub)
+            # this switch exists for performance reasons:
+            # the .update() method to aggregate the subset (sub)
+            # is very slow but necessary for multiple val_keys
+            if type(val_keys) is set:
+                sub = set()
+                for val_key in val_keys:
+                    sub.update(self._idxs[idx_key].get(val_key, set()))
+                agg.append(sub)
+
+            # thus this greatly speeds up retrieval for single key lookups
+            # (for more info see src/scripts/dataclass_index_perf.py
+            elif val_keys in self._idxs[idx_key]:
+                agg.append(self._idxs[idx_key][val_keys])
 
         return agg
 
