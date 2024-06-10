@@ -358,6 +358,17 @@ class TestDrslv:
         with pytest.raises(KeyError):
             drslv(d, "*.x")
 
+    def test_dtype(self):
+        d = dict(foo=dict(bar="deep"), flat="flat")
+
+        assert drslv(d, "foo.bar", dtype=str) == "deep"
+        with pytest.raises(TypeError):
+            drslv(d, "foo.bar", dtype=int)
+
+        assert drslv(d, "foo.bar", collapse=2, dtype=str) == d
+        with pytest.raises(TypeError):
+            drslv(d, "foo.bar", collapse=2, dtype=int)
+
 
 class TestDConv:
     def test_empty_dic(self):

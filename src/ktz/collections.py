@@ -306,13 +306,43 @@ class Incrementer(dict):
 T = TypeVar("T")
 
 
+# to allow for optional type checking, a
+# a NOT type to overload drslv NOT NONE type
+# https://github.com/python/typing/issues/801
+
+
+# @overload
+# def drslv(
+#     dic: dict[str, Any],
+#     chain: str,
+#     sep: str = ".",
+#     default: Any = KeyError,
+#     collapse: int | None = None,
+#     dtype: T = ...,
+# ) -> T | dict[str, T]:
+#     ...
+
+
+# @overload
+# def drslv(
+#     dic: dict[str, Any],
+#     chain: str,
+#     sep: str = ".",
+#     default: Any = KeyError,
+#     collapse: int | None = None,
+#     dtype: None = None,
+# ) -> Any | dict[str, Any]:
+#     ...
+
+
 def drslv(
-    dic: dict[str, T],
+    dic: dict[str, Any],
     chain: str,
     sep: str = ".",
     default: Any = KeyError,
     collapse: int | None = None,
-) -> T | dict[str, T]:
+    dtype: T | None = None,
+) -> T | Any | dict[str, T] | dict[str, Any]:
     """
     Resolve string trails in deep dictionaries.
 
@@ -336,6 +366,8 @@ def drslv(
         Return an n-level deep dict instead
     default : Any
         For missing keys; defaults to raising a KeyError
+    dtype : Any | None
+        If not None: checks value(s) with isinstance
 
     Examples
     --------
@@ -387,7 +419,20 @@ def drslv(
 
         return default
 
-    return trail[-collapse] if collapse else ret
+    final = trail[-collapse] if collapse else ret
+
+    def rcheck(x, dtype):
+        if isinstance(x, dict):
+            for val in x.values():
+                rcheck(val, dtype)
+        else:
+            if not isinstance(x, dtype):
+                raise TypeError(f"expected {dtype}, got {type(x)}")
+
+    if dtype is not None:
+        rcheck(ret, dtype)
+
+    return final
 
 
 def dflat(
