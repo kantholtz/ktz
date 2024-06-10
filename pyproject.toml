@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ktz"
-version = "0.3.0"
+version = "0.4.0"
 description = "Kantholtz' Python Toolbox"
 authors = ["Felix Hamann <felix@hamann.xyz>"]
 license = "MIT"
