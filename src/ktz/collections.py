@@ -33,7 +33,7 @@ Index = int
 @overload
 def buckets(
     col: Collection[tuple[A, B]],
-) -> dict[A, B]:
+) -> dict[A, list[B]]:
     ...
 
 
@@ -43,7 +43,7 @@ def buckets(
     col: Collection[A],
     key: Callable[[Index, A], tuple[C, D]],
     mapper: None = ...,
-) -> dict[C, D]:
+) -> dict[C, list[D]]:
     ...
 
 
@@ -63,7 +63,7 @@ def buckets(
     col: Collection[A],
     key: Callable[[Index, A], tuple[C, D]],
     mapper: Callable[[tuple[D, ...]], E],
-) -> dict[B, E]:
+) -> dict[C, E]:
     ...
 
 
@@ -71,7 +71,7 @@ def buckets(
     col: Collection[A] | Collection[tuple[A, B]],
     key: Callable[[Index, A], tuple[B, C]] | None = None,
     mapper: Callable[[tuple[C, ...]], D] | None = None,
-) -> dict[A, B] | dict[A, D] | dict[B, C] | dict[B, D]:
+) -> dict[A, list[B]] | dict[A, list[C]] | dict[A, D]:
     """
     Sort data into buckets.
 
