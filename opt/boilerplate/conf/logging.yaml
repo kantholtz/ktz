@@ -1,0 +1,44 @@
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  standard:
+    format: '[%(asctime)s] %(name)s %(levelname)s [%(process)d] %(message)s'
+    datefmt: '%m.%d | %H:%M:%S'
+  plain:
+    format: '%(name)s - %(message)s'
+
+
+handlers:
+  logfile-out:
+    class: logging.FileHandler
+    # provided: ENV (see __init__.py)
+    filename: "{ENV.DIR.DATA}/log-info.log"
+    formatter: standard
+
+  logfile-err:
+    class: logging.FileHandler
+    # provided: ENV (see __init__.py)
+    filename: "{ENV.DIR.DATA}/log-error.log"
+    formatter: standard
+
+  stdout:
+    class: logging.StreamHandler
+    formatter: plain
+    stream: ext://sys.stdout
+
+  void:
+    class: logging.NullHandler
+
+
+loggers:
+  root:
+    level: INFO
+    handlers:
+      - logfile-out
+
+  py.warnings:
+    level: DEBUG
+    propagate: False
+    handlers:
+      - logfile-err

@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "boilerplate"
+version = "0.1.0"
+description = ""
+authors = ["Felix Hamann <felix@hamann.xyz>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+boilerplate = "boilerplate.cli:entry"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+rich = "^13.9.4"
+rich-click = "^1.8.5"
+pretty-errors = "^1.2.25"
+ktz = "^0.4.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.31.0"
+pudb = "^2024.1.3"
+pyright = "*"
+black = "*"
+isort = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
