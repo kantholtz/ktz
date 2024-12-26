@@ -9,7 +9,6 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 PyYAML = "^6.0.1"
-notebook = "^7.2.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.25.0"
@@ -24,6 +23,8 @@ pytest-pudb = "^0.7.0"
 pyright = "^1.1.365"
 rich = "^13.7.1"
 tqdm = "^4.66.4"
+notebook = "^7.2.0"
+
 
 [build-system]
 requires = ["poetry-core"]
