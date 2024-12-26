@@ -55,8 +55,43 @@ def main(debug: bool, quiet: bool):
 
 
 # KTZ_BOILERPLATE_DELETE >>>
-_DEL_MARKER_START = "KTZ_BOILERPLATE_DELETE >>>"
-_DEL_MARKER_END = "KTZ_BOILERPLATE_DELETE <<<"
+_DEL_MARKER_START = "# KTZ_BOILERPLATE_DELETE >>>"
+_DEL_MARKER_END = "# KTZ_BOILERPLATE_DELETE <<<"
+
+
+def _repl_remove_marked(s: str) -> str:
+    lines, buf = s.split("\n")[::-1], []
+    while lines:
+        saved = line = lines.pop()
+        if _DEL_MARKER_START == line.strip():
+            while _DEL_MARKER_END != line.strip():
+                line = lines.pop()
+            continue
+
+        buf.append(saved)
+    return "\n".join(buf)
+
+
+def _repl_replace(s: str, name: str):
+    # replace boilerplate occurences with new name
+    for fn in (str.capitalize, str.upper, str.lower):
+        s = s.replace(fn("boilerplate"), fn(name))
+    return s
+
+
+def _repl_read_replace_write(
+    old_fpath: Path,
+    new_fpath: Path,
+    name: str,
+):
+    with old_fpath.open(mode="r") as fd:
+        s = fd.read()
+
+    s = _repl_remove_marked(s)
+    s = _repl_replace(s, name)
+
+    with new_fpath.open(mode="w") as fd:
+        fd.write(s)
 
 
 @main.command("replicate")
@@ -66,31 +101,6 @@ def main_replicate(name, destination):
     """Create copy of this boilerplate with a different name."""
     new_root = path(destination, exists=False, create=True)
     old_root = boilerplate.ENV.DIR.ROOT
-
-    def _read_replace_write(
-        old_fpath: Path,
-        new_fpath: Path,
-    ):
-        with old_fpath.open(mode="r") as fd:
-            s = fd.read()
-
-        # replace boilerplate occurences with new name
-        for fn in (str.capitalize, str.upper, str.lower):
-            s = s.replace(fn("boilerplate"), fn(name))
-
-        # remove marked sections
-        lines, buf = s.split("\n")[::-1], []
-        while lines:
-            line = lines.pop()
-            if _DEL_MARKER_START in line:
-                while _DEL_MARKER_END not in line:
-                    lines.pop()
-                continue
-
-            buf.append(line)
-
-        with new_fpath.open(mode="w") as fd:
-            fd.write("\n".join(buf))
 
     exclude = {"/data", "README.md", "__pycache__"}
     rename = {"README.template.md": "README.md"}
@@ -122,7 +132,11 @@ def main_replicate(name, destination):
 
         else:
             cprint(" adjusted and copied", style="green")
-            _read_replace_write(old_fpath=old_path, new_fpath=new_path)
+            _repl_read_replace_write(
+                old_fpath=old_path,
+                new_fpath=new_path,
+                name=name,
+            )
 
         cprint("\n")
 
